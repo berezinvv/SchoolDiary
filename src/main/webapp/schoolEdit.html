@@ -1,0 +1,55 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="schoolApp" ng-controller="schoolCtrl">
+    <table class="table table-striped">
+        <tr>
+            <td>Назва</td>
+            <td><input type="text" name="name" value="{{school.name}}"></td>
+        </tr>
+        <tr>
+            <td>Телефон</td>
+            <td><input type="text" name="phone" value="{{school.phone}}"></td>
+        </tr>
+        <td>Директор:</td>
+        <td>
+            <table class="table table-striped">
+                <tr>
+                    <td>Ім'я</td>
+                    <td><input type="text" name="firstName" value="{{school.director.firstName}}"></td>
+                </tr>
+                <tr>
+                    <td>Прізвище</td>
+                    <td><input type="text" name="lastName" value="{{school.director.lastName}}"></td>
+                </tr>
+                <tr>
+                    <td>Телефон</td>
+                    <td><input type="text" name="phone" value="{{school.director.phone}}"></td>
+                </tr>
+            </table>
+        </td>
+        <tr>
+            <td></td>
+            <td>
+                <button class="btn btn-info" ng-click="redirectEdit()">Редагувати</button>
+            </td>
+        </tr>
+    </table>
+</div>
+<script>
+    var id = location.search.split('id=')[1];
+    var app = angular.module('schoolApp', []);
+    app.controller('schoolCtrl', function($scope, $http) {
+    $http.get("/api/schools/"+id)
+    .then(function(response) {
+    $scope.school = response.data;
+    });
+});
+</script>
+</body>
+</html>

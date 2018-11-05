@@ -1,0 +1,67 @@
+package com.ssitacademy.berezinvv.schooldiary.controller.api;
+
+import com.ssitacademy.berezinvv.schooldiary.dto.SchoolDTO;
+import com.ssitacademy.berezinvv.schooldiary.exception.ServiceNotFoundException;
+import com.ssitacademy.berezinvv.schooldiary.model.School;
+import com.ssitacademy.berezinvv.schooldiary.service.SchoolService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/api")
+public class SchoolController {
+
+    @Autowired
+    SchoolService schoolService;
+
+    ModelMapper modelMapper = new ModelMapper();
+
+    @GetMapping(value = "/schools", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<SchoolDTO>> findAll() {
+        List<School> schools = schoolService.findAll();
+
+        List<SchoolDTO> schoolsDTO = schools.stream().map(school->modelMapper.map(school, SchoolDTO.class)).collect(Collectors.toList());
+        return new ResponseEntity<>(schoolsDTO, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/schools", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SchoolDTO> newSchool(@RequestBody SchoolDTO newSchoolDTO) {
+        School school = modelMapper.map(newSchoolDTO, School.class);
+        schoolService.create(school);
+        SchoolDTO schoolDTO = modelMapper.map(school, SchoolDTO.class);
+        return new ResponseEntity<>(schoolDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/schools/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SchoolDTO> findOne(@PathVariable Long id) {
+        School school = schoolService.findById(id)
+                .orElseThrow(() -> new ServiceNotFoundException(id, "school"));
+
+        SchoolDTO schoolDTO = modelMapper.map(school, SchoolDTO.class);
+        return new ResponseEntity<>(schoolDTO, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/schools/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SchoolDTO> replaceSchool(@RequestBody SchoolDTO newSchoolDTO, @PathVariable Long id) {
+        School school = modelMapper.map(newSchoolDTO, School.class);
+        school.setId(id);
+        schoolService.create(school);
+
+        SchoolDTO schoolDTO = modelMapper.map(school, SchoolDTO.class);
+        return new ResponseEntity<>(schoolDTO, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/schools/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deleteSchool(@PathVariable Long id) {
+        schoolService.delete(id);
+        return new ResponseEntity<String>("{\"info\": \"DELETE Response\"}", HttpStatus.OK);
+    }
+}

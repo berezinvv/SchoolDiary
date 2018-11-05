@@ -1,0 +1,35 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+    <link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<a href="schools.html" class="btn btn-secondary">Школи</a>
+<a href="employees.html" class="btn btn-secondary">Cпівробітники</a>
+
+<div ng-app="schoolApp" ng-controller="schoolCtrl">
+
+    <h2>Виберіть школу:</h2>
+    <select class="form-control" width = 300px; ng-model="selectedSchool" ng-options="data.name for data in schools">
+    </select>
+
+    <h2>Директор: {{selectedSchool.director.firstName}} {{selectedSchool.director.lastName}}</h2>
+    <p>Телефон: {{selectedSchool.phone}}</p>
+
+</div>
+
+<script>
+var app = angular.module('schoolApp', []);
+app.controller('schoolCtrl', function($scope, $http) {
+    $http.get("/api/schools")
+    .then(function(response) {
+    $scope.schools = response.data;
+    });
+});
+</script>
+
+</body>
+</html>

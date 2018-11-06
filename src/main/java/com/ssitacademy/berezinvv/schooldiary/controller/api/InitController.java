@@ -124,7 +124,7 @@ public class InitController {
         pupils.add(pupil_20);
 
         //classGroup
-        Date date2018 = java.sql.Date.valueOf("2018-09-02");
+        Date date2018 = java.sql.Date.valueOf("2018-09-01");
         ClassGroup classGroup = new ClassGroup(1, "3-А", date2018, teacher, school);
         classGroupService.create(classGroup);
         classGroup.setPupils(pupils);

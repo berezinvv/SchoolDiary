@@ -1,12 +1,12 @@
 package com.ssitacademy.berezinvv.schooldiary.service;
 
 import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
+import com.ssitacademy.berezinvv.schooldiary.model.Pupil;
 import com.ssitacademy.berezinvv.schooldiary.repository.ClassGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ClassGroupServiceImpl implements ClassGroupService {
@@ -42,5 +42,14 @@ public class ClassGroupServiceImpl implements ClassGroupService {
     @Override
     public void delete(Long id) {
         classGroupRepository.deleteById(id);
+    }
+
+    /*@Override
+    public List<ClassGroup> findAllByPupil(Set<Pupil> pupil) {
+        return classGroupRepository.findAllByPupil(pupil);
+    }*/
+    @Override
+    public List<ClassGroup> findAllClassGroupByPupil(Pupil pupil) {
+        return classGroupRepository.findAllClassGroupByPupil(pupil);
     }
 }

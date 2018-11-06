@@ -1,6 +1,7 @@
 package com.ssitacademy.berezinvv.schooldiary.service;
 
 import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
+import com.ssitacademy.berezinvv.schooldiary.model.Pupil;
 import com.ssitacademy.berezinvv.schooldiary.model.Schedule;
 
 import java.util.List;
@@ -21,5 +22,4 @@ public interface ScheduleService {
     void delete(Long id);
 
     List<Schedule> findAllByClassGroup(ClassGroup classGroup);
-
 }

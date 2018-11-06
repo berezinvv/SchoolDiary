@@ -4,6 +4,7 @@ import com.ssitacademy.berezinvv.schooldiary.dto.EmployeeDTO;
 import com.ssitacademy.berezinvv.schooldiary.exception.ServiceNotFoundException;
 import com.ssitacademy.berezinvv.schooldiary.model.Employee;
 import com.ssitacademy.berezinvv.schooldiary.service.EmployeeService;
+import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class EmployeeController {
     ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping(value = "/employees", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "View a list of available Employee", response = Iterable.class)
     public ResponseEntity<List<EmployeeDTO>> findAll() {
         List<Employee> employees = employeeService.findAll();
 
@@ -33,6 +35,7 @@ public class EmployeeController {
     }
 
     @PostMapping(value = "/employees", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Adding new Employee", response = Iterable.class)
     public ResponseEntity<EmployeeDTO> newEmployee(@RequestBody EmployeeDTO newEmployeeDTO) {
 
         Employee employee = modelMapper.map(newEmployeeDTO, Employee.class);
@@ -42,6 +45,7 @@ public class EmployeeController {
     }
 
     @GetMapping(value = "/employees/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "View one available Employee", response = Iterable.class)
     public ResponseEntity<EmployeeDTO> findOne(@PathVariable Long id) {
 
         Employee employee = employeeService.findById(id)
@@ -52,6 +56,7 @@ public class EmployeeController {
     }
 
     @PutMapping(value = "/employees/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Replace one available Employee", response = Iterable.class)
     public ResponseEntity<EmployeeDTO> replaceEmployee(@RequestBody EmployeeDTO newEmployeeDTO, @PathVariable Long id) {
 
         Employee employee = modelMapper.map(newEmployeeDTO, Employee.class);
@@ -63,6 +68,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping(value = "/employees/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Delete one available Employee", response = Iterable.class)
     public ResponseEntity<String> deleteEmployee(@PathVariable Long id) {
         employeeService.delete(id);
         return new ResponseEntity<String>("{\"info\": \"DELETE Response\"}", HttpStatus.OK);

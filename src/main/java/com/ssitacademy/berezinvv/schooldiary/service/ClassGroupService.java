@@ -1,9 +1,11 @@
 package com.ssitacademy.berezinvv.schooldiary.service;
 
 import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
+import com.ssitacademy.berezinvv.schooldiary.model.Pupil;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ClassGroupService {
 
@@ -18,5 +20,8 @@ public interface ClassGroupService {
     void delete(ClassGroup classGroup);
 
     void delete(Long id);
+
+    //List<ClassGroup> findAllByPupil(Set<Pupil> pupil);
+    List<ClassGroup> findAllClassGroupByPupil(Pupil pupil);
 
 }

@@ -4,6 +4,7 @@ import com.ssitacademy.berezinvv.schooldiary.dto.SchoolDTO;
 import com.ssitacademy.berezinvv.schooldiary.exception.ServiceNotFoundException;
 import com.ssitacademy.berezinvv.schooldiary.model.School;
 import com.ssitacademy.berezinvv.schooldiary.service.SchoolService;
+import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class SchoolController {
     ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping(value = "/schools", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "View a list of available School", response = Iterable.class)
     public ResponseEntity<List<SchoolDTO>> findAll() {
         List<School> schools = schoolService.findAll();
 
@@ -33,6 +35,7 @@ public class SchoolController {
     }
 
     @PostMapping(value = "/schools", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Adding new School", response = Iterable.class)
     public ResponseEntity<SchoolDTO> newSchool(@RequestBody SchoolDTO newSchoolDTO) {
         School school = modelMapper.map(newSchoolDTO, School.class);
         schoolService.create(school);
@@ -41,6 +44,7 @@ public class SchoolController {
     }
 
     @GetMapping(value = "/schools/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "View one available School", response = Iterable.class)
     public ResponseEntity<SchoolDTO> findOne(@PathVariable Long id) {
         School school = schoolService.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException(id, "school"));
@@ -50,6 +54,7 @@ public class SchoolController {
     }
 
     @PutMapping(value = "/schools/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Replace one available School", response = Iterable.class)
     public ResponseEntity<SchoolDTO> replaceSchool(@RequestBody SchoolDTO newSchoolDTO, @PathVariable Long id) {
         School school = modelMapper.map(newSchoolDTO, School.class);
         school.setId(id);
@@ -60,6 +65,7 @@ public class SchoolController {
     }
 
     @DeleteMapping(value = "/schools/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Delete one available School", response = Iterable.class)
     public ResponseEntity<String> deleteSchool(@PathVariable Long id) {
         schoolService.delete(id);
         return new ResponseEntity<String>("{\"info\": \"DELETE Response\"}", HttpStatus.OK);

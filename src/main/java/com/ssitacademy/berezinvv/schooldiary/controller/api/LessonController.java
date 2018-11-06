@@ -4,6 +4,7 @@ import com.ssitacademy.berezinvv.schooldiary.dto.LessonDTO;
 import com.ssitacademy.berezinvv.schooldiary.exception.ServiceNotFoundException;
 import com.ssitacademy.berezinvv.schooldiary.model.Lesson;
 import com.ssitacademy.berezinvv.schooldiary.service.LessonService;
+import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class LessonController {
     ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping(value = "/lessons", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "View a list of available Lesson", response = Iterable.class)
     public ResponseEntity<List<LessonDTO>> findAll() {
         List<Lesson> lessons = lessonService.findAll();
 
@@ -33,6 +35,7 @@ public class LessonController {
     }
 
     @PostMapping(value = "/lessons")
+    @ApiOperation(value = "Adding new Lesson", response = Iterable.class)
     ResponseEntity<LessonDTO> newLesson(@RequestBody LessonDTO newLessonDTO) {
         Lesson lesson = modelMapper.map(newLessonDTO, Lesson.class);
         lessonService.create(lesson);
@@ -41,6 +44,7 @@ public class LessonController {
     }
 
     @GetMapping(value = "/lessons/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "View one available Lesson", response = Iterable.class)
     ResponseEntity<LessonDTO> findOne(@PathVariable Long id) {
         Lesson lesson = lessonService.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException(id, "lesson"));
@@ -50,6 +54,7 @@ public class LessonController {
     }
 
     @PutMapping(value = "/lessons/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Replace one available Lesson", response = Iterable.class)
     ResponseEntity<LessonDTO> replaceLesson(@RequestBody LessonDTO newLessonDTO, @PathVariable Long id) {
         Lesson lesson = modelMapper.map(newLessonDTO, Lesson.class);
         lesson.setId(id);
@@ -61,6 +66,7 @@ public class LessonController {
     }
 
     @DeleteMapping(value = "/lessons/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Delete one available Lesson", response = Iterable.class)
     ResponseEntity<String> deleteLesson(@PathVariable Long id) {
         lessonService.delete(id);
         return new ResponseEntity<String>("{\"info\": \"DELETE Response\"}", HttpStatus.OK);

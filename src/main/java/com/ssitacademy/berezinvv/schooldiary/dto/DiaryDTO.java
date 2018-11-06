@@ -1,35 +1,23 @@
-package com.ssitacademy.berezinvv.schooldiary.model;
+package com.ssitacademy.berezinvv.schooldiary.dto;
 
-import javax.persistence.*;
-import javax.validation.constraints.Size;
+import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
+import com.ssitacademy.berezinvv.schooldiary.model.Employee;
+import com.ssitacademy.berezinvv.schooldiary.model.Lesson;
+import com.ssitacademy.berezinvv.schooldiary.model.Pupil;
+
 import java.sql.Date;
 
-@Entity
-@Table(name = "Diary")
-public class Diary {
+public class DiaryDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(name = "date", nullable = false)
     private Date date;
-    @ManyToOne
-    @JoinColumn(name = "classGroup_id", nullable = false)
     private ClassGroup classGroup;
-    @ManyToOne
-    @JoinColumn(name = "lesson_id", nullable = false)
     private Lesson lesson;
-    @ManyToOne
-    @JoinColumn(name = "teacher_id", nullable = false)
     private Employee teacher;
-    @ManyToOne
-    @JoinColumn(name = "pupil_id", nullable = false)
     private Pupil pupil;
-    @Size(max = 12)
-    @Column(name = "grade")
     private int grade;
 
-    public Diary() {
+    public DiaryDTO() {
     }
 
     public long getId() {

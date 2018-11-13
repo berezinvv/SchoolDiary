@@ -1,24 +1,19 @@
 package com.ssitacademy.berezinvv.schooldiary.dto;
 
-import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
-import com.ssitacademy.berezinvv.schooldiary.model.Day;
-import com.ssitacademy.berezinvv.schooldiary.model.Employee;
-import com.ssitacademy.berezinvv.schooldiary.model.Lesson;
-
-import javax.persistence.*;
+import java.time.DayOfWeek;
 
 public class ScheduleDTO {
     private long id;
     private int indexNumber;
-    private ClassGroupDTO classGroup;
-    private Day day;
+    private ClassGroupShortDTO classGroup;
+    private DayOfWeek day;
     private EmployeeDTO teacher;
     private LessonDTO lesson;
 
     public ScheduleDTO() {
     }
 
-    public ScheduleDTO(long id, int indexNumber, ClassGroupDTO classGroup, Day day, EmployeeDTO teacher, LessonDTO lesson) {
+    public ScheduleDTO(long id, int indexNumber, ClassGroupShortDTO classGroup, DayOfWeek day, EmployeeDTO teacher, LessonDTO lesson) {
         this.id = id;
         this.indexNumber = indexNumber;
         this.classGroup = classGroup;
@@ -43,19 +38,19 @@ public class ScheduleDTO {
         this.indexNumber = indexNumber;
     }
 
-    public ClassGroupDTO getClassGroup() {
+    public ClassGroupShortDTO getClassGroup() {
         return classGroup;
     }
 
-    public void setClassGroup(ClassGroupDTO classGroup) {
+    public void setClassGroup(ClassGroupShortDTO classGroup) {
         this.classGroup = classGroup;
     }
 
-    public Day getDay() {
+    public DayOfWeek getDay() {
         return day;
     }
 
-    public void setDay(Day day) {
+    public void setDay(DayOfWeek day) {
         this.day = day;
     }
 

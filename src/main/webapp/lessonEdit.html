@@ -1,0 +1,43 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="lessonApp" ng-controller="lessonCtrl">
+    <table class="table table-striped">
+        <tr>
+            <td>Назва</td>
+            <td><input type="text" class="form-control col-md-2" id="lesson.name" ng-model="lesson.name" value="{{lesson.name}}"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button class="btn btn-info" ng-click="redirectEdit()">Редагувати</button>
+            </td>
+        </tr>
+    </table>
+</div>
+<script>
+    var id = location.search.split('id=')[1];
+    var app = angular.module('lessonApp', []);
+    app.controller('lessonCtrl', function($scope, $http) {
+    $http.get("/api/lessons/"+id)
+    .then(function(response) {
+    $scope.lesson = response.data;
+    })
+    $scope.redirectEdit = function (){
+        var dataObj = {
+                id : id,
+				name : $scope.lesson.name
+		};
+		$http.put('/api/lessons/'+id, dataObj);
+
+		window.location = "/lessons.html";
+    }
+    });
+</script>
+</body>
+</html>

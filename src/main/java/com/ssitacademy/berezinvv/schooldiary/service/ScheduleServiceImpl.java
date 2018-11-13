@@ -1,12 +1,12 @@
 package com.ssitacademy.berezinvv.schooldiary.service;
 
 import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
-import com.ssitacademy.berezinvv.schooldiary.model.Pupil;
 import com.ssitacademy.berezinvv.schooldiary.model.Schedule;
 import com.ssitacademy.berezinvv.schooldiary.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,5 +49,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<Schedule> findAllByClassGroup(ClassGroup classGroup) {
         return scheduleRepository.findAllByClassGroup(classGroup);
+    }
+
+    @Override
+    public List<Schedule> findAllByClassGroupAndDay(ClassGroup classgroup, DayOfWeek day) {
+        return scheduleRepository.findAllByClassGroupAndDay(classgroup, day);
     }
 }

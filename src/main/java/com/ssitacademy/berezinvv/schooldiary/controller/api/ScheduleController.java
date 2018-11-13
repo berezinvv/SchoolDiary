@@ -2,7 +2,9 @@ package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
 import com.ssitacademy.berezinvv.schooldiary.dto.ScheduleDTO;
 import com.ssitacademy.berezinvv.schooldiary.exception.ServiceNotFoundException;
+import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
 import com.ssitacademy.berezinvv.schooldiary.model.Schedule;
+import com.ssitacademy.berezinvv.schooldiary.service.ClassGroupService;
 import com.ssitacademy.berezinvv.schooldiary.service.ScheduleService;
 import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
@@ -12,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,34 +25,60 @@ public class ScheduleController {
 
     @Autowired
     ScheduleService scheduleService;
+    @Autowired
+    private ClassGroupService classGroupService;
 
     ModelMapper modelMapper = new ModelMapper();
 
+    @GetMapping(value = "/schedules/class-group/{id}/day/{day}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "View a list of available Schedule by class gropu and day of week", response = ScheduleDTO.class, responseContainer="List")
+    public ResponseEntity<List<ScheduleDTO>> findAllByClassGroupAndDay(@PathVariable Long id,
+                                                                 @PathVariable String day) {
+
+        ClassGroup classGroup = classGroupService.findById(id)
+                .orElseThrow(() -> new ServiceNotFoundException(id, "class group"));
+
+        List<Schedule> schedules = scheduleService.findAllByClassGroupAndDay(classGroup, DayOfWeek.valueOf(day));
+
+        List<ScheduleDTO> schedulesDTO = schedules.stream().map(schedule->modelMapper.map(schedule, ScheduleDTO.class)).collect(Collectors.toList());
+
+        return new ResponseEntity<>(schedulesDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/schedules/class-group/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "View a list of available Schedule", response = ScheduleDTO.class, responseContainer="List")
+    public ResponseEntity<List<ScheduleDTO>> findAllByClassGroup(@PathVariable Long id) {
+
+        ClassGroup classGroup = classGroupService.findById(id)
+                .orElseThrow(() -> new ServiceNotFoundException(id, "class group"));
+        List<Schedule> schedules = scheduleService.findAllByClassGroup(classGroup);
+
+        List<ScheduleDTO> schedulesDTO = schedules.stream().map(schedule->modelMapper.map(schedule, ScheduleDTO.class)).collect(Collectors.toList());
+
+        return new ResponseEntity<>(schedulesDTO, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/schedules", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "View a list of available Schedule", response = Iterable.class)
+    @ApiOperation(value = "View a list of available Schedule", response = ScheduleDTO.class, responseContainer="List")
     public ResponseEntity<List<ScheduleDTO>> findAll() {
-        List<ScheduleDTO> schedulesDTO = new ArrayList<>();
         List<Schedule> schedules = scheduleService.findAll();
 
-        schedulesDTO = schedules.stream().map(schedule->modelMapper.map(schedule, ScheduleDTO.class)).collect(Collectors.toList());
-        for (Schedule schedule : schedules) {
-            ScheduleDTO scheduleDTO = modelMapper.map(schedule, ScheduleDTO.class);
-            schedulesDTO.add(scheduleDTO);
-        }
+        List<ScheduleDTO> schedulesDTO = schedules.stream().map(schedule->modelMapper.map(schedule, ScheduleDTO.class)).collect(Collectors.toList());
+
         return new ResponseEntity<>(schedulesDTO, HttpStatus.OK);
     }
 
     @PostMapping(value = "/schedules", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Adding new Schedule", response = Iterable.class)
+    @ApiOperation(value = "Adding new Schedule", response = ScheduleDTO.class)
     public ResponseEntity<ScheduleDTO> newSchedule(@RequestBody ScheduleDTO newScheduleDTO) {
         Schedule schedule = modelMapper.map(newScheduleDTO, Schedule.class);
         scheduleService.create(schedule);
         ScheduleDTO scheduleDTO = modelMapper.map(schedule, ScheduleDTO.class);
-        return new ResponseEntity<>(scheduleDTO, HttpStatus.OK);
+        return new ResponseEntity<>(scheduleDTO, HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/schedules/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "View one available Schedule", response = Iterable.class)
+    @ApiOperation(value = "View one available Schedule", response = ScheduleDTO.class)
     public ResponseEntity<ScheduleDTO> findOne(@PathVariable Long id) {
 
         Schedule schedule = scheduleService.findById(id)
@@ -60,18 +89,18 @@ public class ScheduleController {
     }
 
     @PutMapping(value = "/schedules/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Replace one available Schedule", response = Iterable.class)
+    @ApiOperation(value = "Replace one available Schedule", response = ScheduleDTO.class)
     public ResponseEntity<ScheduleDTO> replaceSchedule(@RequestBody ScheduleDTO newScheduleDTO, @PathVariable Long id) {
         Schedule schedule = modelMapper.map(newScheduleDTO, Schedule.class);
         schedule.setId(id);
-        scheduleService.create(schedule);
+        scheduleService.update(schedule);
 
         ScheduleDTO scheduleDTO = modelMapper.map(schedule, ScheduleDTO.class);
         return new ResponseEntity<>(scheduleDTO, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/schedules/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Delete one available Schedule", response = Iterable.class)
+    @ApiOperation(value = "Delete one available Schedule", response = String.class)
     public ResponseEntity<String> deleteSchedule(@PathVariable Long id) {
         scheduleService.delete(id);
         return new ResponseEntity<String>("{\"info\": \"DELETE Response\"}", HttpStatus.OK);

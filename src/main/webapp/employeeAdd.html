@@ -1,0 +1,50 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="employeeApp" ng-controller="employeeCtrl">
+    <table class="table table-striped">
+        <tr>
+            <td>Ім'я</td>
+            <td><input type="text" class="form-control col-md-2" id="firstName" ng-model="employee.firstName" value="{{employee.firstName}}"></td>
+        </tr>
+        <tr>
+            <td>Прізвище</td>
+            <td><input type="text" class="form-control col-md-2" id="lastName" ng-model="employee.lastName" value="{{employee.lastName}}"></td>
+        </tr>
+        <tr>
+            <td>Телефон</td>
+            <td><input type="text" class="form-control col-md-2" id="phone" ng-model="employee.phone" value="{{employee.phone}}"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button class="btn btn-info" ng-click="redirectEdit()">Додати</button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    var app = angular.module('employeeApp', []);
+    app.controller('employeeCtrl', function($scope, $http) {
+    $scope.redirectEdit = function (){
+        var dataObj = {
+                id : 0,
+				firstName : $scope.employee.firstName,
+				lastName : $scope.employee.lastName,
+				phone : $scope.employee.phone
+		};
+		$http.post('/api/employees', dataObj);
+
+		window.location = "/employees.html";
+    }
+    });
+</script>
+
+</body>
+</html>

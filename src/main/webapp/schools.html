@@ -5,11 +5,12 @@
     <link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <body>
+<!--<header><a href="/" class="btn btn-warning">Головна</a></header>-->
+<div align="center" ng-app="schoolApp" ng-controller="schoolCtrl">
 
-<div ng-app="schoolApp" ng-controller="schoolCtrl">
     <table class = "table table-striped">
         <tr>
-            <th></th>
+            <th><button class="btn btn-info" ng-click="redirectAdd()">Додати</button></th>
             <th>Назва</th>
             <th>Директор</th>
             <th>Телефон</th>
@@ -33,15 +34,18 @@ var app = angular.module('schoolApp', []);
 app.controller('schoolCtrl', function($scope, $http) {
     $http.get("/api/schools")
     .then(function(response) {
-    $scope.schools = response.data;
-    });
-$scope.redirectEdit = function (id){
-    window.location = "/schooledit?id="+id;
-}
-$scope.redirectDelete = function (id){
-    $http.delete("/api/schools/"+id);
-    window.location = "/schools.html";
-}
+        $scope.schools = response.data;
+    })
+    $scope.redirectEdit = function (id){
+        window.location = "/school-edit?id="+id;
+    }
+    $scope.redirectAdd = function (){
+        window.location = "/schoolAdd.html";
+    }
+    $scope.redirectDelete = function (id){
+        $http.delete("/api/schools/"+id);
+        window.location = "/schools.html";
+    }
 });
 
 </script>

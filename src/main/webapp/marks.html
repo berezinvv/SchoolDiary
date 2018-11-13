@@ -1,0 +1,67 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="pupilApp" ng-controller="pupilCtrl">
+    <table class="table table-striped">
+        <tr>
+            <td>Ім'я</td>
+            <td>
+                <label type="text" id="firstName">
+                    <h3>{{pupil.firstName}}</h3>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>Прізвище</td>
+            <td>
+                <label type="text" id="lastName">
+                    <h3>{{pupil.lastName}}</h3>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>Оцінки</td>
+            <td>
+                <table class="table table-striped">
+                    <tr>
+                        <td>Дата</td>
+                        <td>Урок</td>
+                        <td>Оцінка</td>
+                    </tr>
+                    <tr ng-repeat="data in marks">
+                        <td>{{data.date}}</td>
+                        <td>{{data.lesson.name}}</td>
+                        <td>{{data.grade}}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    var id = location.search.split('id=')[1];
+    var app = angular.module('pupilApp', []);
+    app.controller('pupilCtrl', function($scope, $http) {
+        $http.get("/api/pupils/"+id)
+            .then(function(response) {
+        $scope.pupil = response.data;
+        })
+        $http.get("/api/diary/"+id)
+            .then(function(response) {
+        $scope.marks = response.data;
+        })
+    });
+
+
+
+
+</script>
+
+</body>
+</html>

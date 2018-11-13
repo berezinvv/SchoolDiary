@@ -1,0 +1,107 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="classGroupApp" ng-controller="classGroupCtrl">
+    <table class="table table-striped">
+        <tr>
+            <td>Школа</td>
+            <td><h3>{{classGroup.school.name}}</h3></td>
+        </tr>
+        <tr>
+            <td>Назва</td>
+            <td><input type="text" class="form-control col-md-2" id="name" ng-model="classGroup.name" value="{{classGroup.name}}"></td>
+        </tr>
+        <tr>
+            <td>Початок навчання</td>
+            <td><input type="text" class="form-control col-md-2" id="beginTime" ng-model="classGroup.beginTime" value="{{classGroup.beginTime}}"></td>
+        </tr>
+        <tr>
+            <td>Класний керівник</td>
+            <td>
+                <select class="form-control col-md-4" ng-model="selectedTeacher" ng-selected="selectedTeacher==employee" ng-options="employee.value as employee.firstName + ' ' + employee.lastName for employee in employees">
+                </select>
+                <!--<select class="form-control col-md-4" ng-model="selectedTeacher">-->
+                    <!--<option  ng-repeat="employee in employees" ng-selected="{{employee == selectedTeacher}}" value="{{employee.firstNam}}">{{employee.firstName}} {{employee.firstName}}</option>-->
+                <!--</select>-->
+            </td>
+        </tr>
+        <tr>
+            <td>Учні</td>
+            <td>
+                <select class="form-control col-md-4" ng-model="selectedPupil" ng-options="pupil.value as pupil.firstName + ' ' + pupil.lastName for pupil in allPupils">
+                </select>
+                <button class="btn btn-info" ng-click="redirectAdd(selectedPupil)">Додати</button>
+                <table class="table table-striped">
+                    <tr>
+                        <th></th>
+                        <th>Прізвище</th>
+                        <th>Ім'я</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="data in pupils">
+                        <td>{{data.id}}</td>
+                        <td>{{data.firstName}}</td>
+                        <td>{{data.lastName}}</td>
+                        <td><button class="btn btn-danger" ng-click="redirectDelete($index)">Видалити</button></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button class="btn btn-info" ng-click="redirectEdit(pupils)">Редагувати</button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    var id = location.search.split('id=')[1];
+    var app = angular.module('classGroupApp', []);
+    app.controller('classGroupCtrl', function($scope, $http) {
+        $http.get("/api/employees")
+            .then(function(response) {
+            $scope.employees = response.data;
+        })
+        $http.get("/api/pupils")
+            .then(function(response) {
+            $scope.allPupils = response.data;
+        })
+        $http.get("/api/classes/"+id)
+            .then(function(response) {
+            $scope.classGroup = response.data;
+            $scope.selectedTeacher = response.data.teacher;
+        })
+        $http.get('/api/pupilClassGroup/' + id)
+            .then(function(response) {
+            $scope.pupils = response.data;
+        })
+        $scope.redirectEdit = function (pupils){
+            var dataObj = {
+                id : id,
+				name : $scope.classGroup.name,
+				beginTime : $scope.classGroup.beginTime,
+				teacher : $scope.classGroup.teacher,
+				school: $scope.classGroup.school,
+				pupils : pupils
+		    }
+		    $http.put('/api/classes/'+id, dataObj);
+		    window.location = "/class-groups?id="+$scope.classGroup.school.id;;
+        }
+        $scope.redirectDelete = function ($index){
+            $scope.pupils.splice($index,1);
+        }
+        $scope.redirectAdd = function (data){
+            $scope.pupils.push(data);
+        }
+    });
+</script>
+
+</body>
+</html>

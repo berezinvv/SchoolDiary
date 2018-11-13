@@ -1,16 +1,19 @@
 package com.ssitacademy.berezinvv.schooldiary.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.sql.Date;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import java.util.Date;
+
 
 @Entity
-@Table(name = "Diary")
+@Table(name = "Diary", uniqueConstraints = {@UniqueConstraint(columnNames = {"date", "classGroup_id", "lesson_id", "pupil_id"})})
 public class Diary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Temporal(TemporalType.DATE)
     @Column(name = "date", nullable = false)
     private Date date;
     @ManyToOne
@@ -25,7 +28,8 @@ public class Diary {
     @ManyToOne
     @JoinColumn(name = "pupil_id", nullable = false)
     private Pupil pupil;
-    @Size(max = 12)
+    @Max(value = 12)
+    @Min(value = 1)
     @Column(name = "grade")
     private int grade;
 

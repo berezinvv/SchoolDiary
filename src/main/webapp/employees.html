@@ -8,9 +8,10 @@
 
 
 <div ng-app="employeeApp" ng-controller="employeeCtrl">
+
     <table class = "table table-striped">
         <tr>
-            <th></th>
+            <th><button class="btn btn-info" ng-click="redirectAdd()">Додати</button></th>
             <th>Ім'я</th>
             <th>Прізвище</th>
             <th>Телефон</th>
@@ -33,16 +34,19 @@
 var app = angular.module('employeeApp', []);
 app.controller('employeeCtrl', function($scope, $http) {
     $http.get("/api/employees")
-    .then(function(response) {
-    $scope.employees = response.data;
+        .then(function(response) {
+        $scope.employees = response.data;
     });
-$scope.redirectEdit = function (id){
-    window.location = "/employeeedit?id="+id;
-}
-$scope.redirectDelete = function (id){
-    $http.delete("http://localhost:8888/api/employees/"+id);
-    window.location = "/employees.html";
-}
+    $scope.redirectEdit = function (id){
+        window.location = "/employee-edit?id="+id;
+    }
+    $scope.redirectAdd = function (){
+        window.location = "/employeeAdd.html";
+    }
+    $scope.redirectDelete = function (id){
+        $http.delete("/api/employees/"+id);
+        window.location = "/employees.html";
+    }
 });
 </script>
 </body>

@@ -2,27 +2,29 @@
 <head>
     <meta charset="utf-8">
 </head>
-    <link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <body>
 
 <div ng-app="employeeApp" ng-controller="employeeCtrl">
-    <table class = "table table-striped">
+    <table class="table table-striped">
         <tr>
             <td>Ім'я</td>
-            <td><input type="text" name="firstName" value="{{employee.firstName}}"></td>
+            <td><input type="text" class="form-control col-md-2" id="firstName" ng-model="employee.firstName" value="{{employee.firstName}}"></td>
         </tr>
         <tr>
             <td>Прізвище</td>
-            <td><input type="text" name="lastName" value="{{employee.lastName}}"></td>
+            <td><input type="text" class="form-control col-md-2" id="lastName" ng-model="employee.lastName" value="{{employee.lastName}}"></td>
         </tr>
         <tr>
             <td>Телефон</td>
-            <td><input type="text" name="phone" value="{{employee.phone}}"></td>
+            <td><input type="text" class="form-control col-md-2" id="phone" ng-model="employee.phone" value="{{employee.phone}}"></td>
         </tr>
         <tr>
             <td></td>
-            <td><button class="btn btn-info" ng-click="redirectEdit()">Редагувати</button></td>
+            <td>
+                <button class="btn btn-info" ng-click="redirectEdit()">Редагувати</button>
+            </td>
         </tr>
     </table>
 </div>
@@ -31,14 +33,23 @@
     var id = location.search.split('id=')[1];
     var app = angular.module('employeeApp', []);
     app.controller('employeeCtrl', function($scope, $http) {
-    $http.get("/api/employees/"+id)
-    .then(function(response) {
-    $scope.employee = response.data;
-    });
+        $http.get("/api/employees/"+id)
+            .then(function(response) {
+        $scope.employee = response.data;
+        })
     $scope.redirectEdit = function (){
-    window.location = "/employees";
-}
-});
+        var dataObj = {
+                id : id,
+				firstName : $scope.employee.firstName,
+				lastName : $scope.employee.lastName,
+				phone : $scope.employee.phone
+		};
+		$http.put('/api/employees/'+id, dataObj);
+
+		window.location = "/employees.html";
+    }
+    });
 </script>
+
 </body>
 </html>

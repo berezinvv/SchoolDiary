@@ -1,0 +1,66 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="pupilApp" ng-controller="pupilCtrl">
+    <table class="table table-striped">
+        <tr>
+            <td>Ім'я</td>
+            <td><input type="text" class="form-control col-md-2" id="firstName" ng-model="pupil.firstName" value="{{pupil.firstName}}"></td>
+        </tr>
+        <tr>
+            <td>Прізвище</td>
+            <td><input type="text" class="form-control col-md-2" id="lastName" ng-model="pupil.lastName" value="{{pupil.lastName}}"></td>
+        </tr>
+        <tr>
+            <td>Батьки</td>
+            <td>
+                <table class="table table-striped">
+                    <tr>
+                        <td>Прізвище ім'я</td>
+                        <td><input type="text" class="form-control col-md-2" id="parentName" ng-model="pupil.parentName" value="{{pupil.parentName}}"></td>
+                        <td>Телефон</td>
+                        <td><input type="text" class="form-control col-md-2" id="parentPhone" ng-model="pupil.parentPhone"
+                                   value="{{pupil.parentPhone}}"></td>
+                    </tr>
+                </table>
+            </td>
+        <tr>
+            <td></td>
+            <td>
+                <button class="btn btn-info" ng-click="redirectEdit()">Редагувати</button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    var id = location.search.split('id=')[1];
+    var app = angular.module('pupilApp', []);
+    app.controller('pupilCtrl', function($scope, $http) {
+        $http.get("/api/pupils/"+id)
+            .then(function(response) {
+        $scope.pupil = response.data;
+        })
+    $scope.redirectEdit = function (){
+        var dataObj = {
+                id : id,
+				firstName : $scope.pupil.firstName,
+				lastName : $scope.pupil.lastName,
+				parentName : $scope.pupil.parentName,
+				parentPhone : $scope.pupil.parentPhone
+		};
+		$http.put('/api/pupils/'+id, dataObj);
+
+		window.location = "/index.html";
+    }
+    });
+
+</script>
+
+</body>
+</html>

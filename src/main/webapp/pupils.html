@@ -1,0 +1,53 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+    <link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+
+<div ng-app="pupilApp" ng-controller="pupilCtrl">
+
+    <table class = "table table-striped">
+        <tr>
+            <th><button class="btn btn-info" ng-click="redirectAdd()">Додати</button></th>
+            <th>Ім'я</th>
+            <th>Прізвище</th>
+            <th>Телефон</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="data in pupils">
+            <td>{{data.id}}</td>
+            <td>{{data.firstName}}</td>
+            <td>{{data.lastName}}</td>
+            <td>{{data.phone}}</td>
+            <td><button class="btn btn-info" ng-click="redirectEdit(data.id)">Редагувати</button></td>
+            <td><button class="btn btn-danger" ng-click="redirectDelete(data.id)">Видалити</button></td>
+        </tr>
+    </table>
+
+</div>
+
+<script>
+var app = angular.module('pupilApp', []);
+app.controller('pupilCtrl', function($scope, $http) {
+    $http.get("/api/pupils")
+        .then(function(response) {
+        $scope.pupils = response.data;
+    });
+    $scope.redirectEdit = function (id){
+        window.location = "/pupil-edit?id="+id;
+    }
+    $scope.redirectAdd = function (){
+        window.location = "/pupilAdd.html";
+    }
+    $scope.redirectDelete = function (id){
+        $http.delete("/api/pupils/"+id);
+        window.location = "/pupils.html";
+    }
+});
+</script>
+</body>
+</html>

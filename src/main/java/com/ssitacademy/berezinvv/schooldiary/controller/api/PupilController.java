@@ -18,10 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,8 +33,20 @@ public class PupilController {
     ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping(value = "/pupilClassGroup/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "View a list of available ClassGroup by Pupil", response = Iterable.class)
-    public ResponseEntity<List<ClassGroupDTO>> getScheduleByClassGroupId(@PathVariable Long id) {
+    @ApiOperation(value = "View a list of available Pupil by ClassGroup", response = PupilDTO.class, responseContainer="List")
+    public ResponseEntity<List<PupilDTO>> findPupilByClassGroupId(@PathVariable Long id) {
+        ClassGroup classGroup = classGroupService.findById(id)
+                .orElseThrow(() -> new ServiceNotFoundException(id, "class group"));
+        List<Pupil> pupils = pupilService.findAllPupilByClassGroup(classGroup);
+        pupils.sort(Comparator.comparingLong(p -> p.getId()));
+        List<PupilDTO> pupilsDTO = pupils.stream().map(pupil -> modelMapper.map(pupil, PupilDTO.class)).collect(Collectors.toList());
+
+        return new ResponseEntity<>(pupilsDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/classGroupByPupil/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "View a list of available ClassGroup by Pupil", response = PupilDTO.class, responseContainer="List")
+    public ResponseEntity<List<ClassGroupDTO>> getClassGroupsByPupilId(@PathVariable Long id) {
         Pupil pupil = pupilService.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException(id, "pupil"));
         List<ClassGroup> classGroups = classGroupService.findAllClassGroupByPupil(pupil);
@@ -48,7 +57,7 @@ public class PupilController {
     }
 
     @GetMapping(value = "/pupils", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "View a list of available Pupil", response = Iterable.class)
+    @ApiOperation(value = "View a list of available Pupil", response = PupilDTO.class, responseContainer="List")
     public ResponseEntity<List<PupilDTO>> findAll() {
         List<Pupil> pupils = pupilService.findAll();
 
@@ -57,16 +66,16 @@ public class PupilController {
     }
 
     @PostMapping(value = "/pupils", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Adding new Pupil", response = Iterable.class)
+    @ApiOperation(value = "Adding new Pupil", response = PupilDTO.class)
     public ResponseEntity<PupilDTO> newPupil(@RequestBody PupilDTO newPupilDTO) {
         Pupil pupil = modelMapper.map(newPupilDTO, Pupil.class);
         pupilService.create(pupil);
         PupilDTO pupilDTO = modelMapper.map(pupil, PupilDTO.class);
-        return new ResponseEntity<>(pupilDTO, HttpStatus.OK);
+        return new ResponseEntity<>(pupilDTO, HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/pupils/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "View one available Pupil", response = Iterable.class)
+    @ApiOperation(value = "View one available Pupil", response = PupilDTO.class)
     public ResponseEntity<PupilDTO> findOne(@PathVariable Long id) {
         Pupil pupil = pupilService.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException(id, "pupil"));
@@ -76,12 +85,12 @@ public class PupilController {
     }
 
     @PutMapping(value = "/pupils/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Replace one available Pupil", response = Iterable.class)
+    @ApiOperation(value = "Replace one available Pupil", response = PupilDTO.class)
     public ResponseEntity<PupilDTO> replacePupil(@RequestBody PupilDTO newPupilDTO, @PathVariable Long id) {
 
         Pupil pupil = modelMapper.map(newPupilDTO, Pupil.class);
         pupil.setId(id);
-        pupilService.create(pupil);
+        pupilService.update(pupil);
 
         PupilDTO pupilDTO = modelMapper.map(pupil, PupilDTO.class);
 
@@ -89,7 +98,7 @@ public class PupilController {
     }
 
     @DeleteMapping(value = "/pupils/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Delete one available Pupil", response = Iterable.class)
+    @ApiOperation(value = "Delete one available Pupil", response = String.class)
     public ResponseEntity<String> deleteSchool(@PathVariable Long id) {
         pupilService.delete(id);
         return new ResponseEntity<String>("{\"info\": \"DELETE Response\"}", HttpStatus.OK);

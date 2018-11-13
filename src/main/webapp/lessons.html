@@ -1,0 +1,49 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+    <link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="lessonApp" ng-controller="lessonCtrl">
+
+    <table class = "table table-striped">
+        <tr>
+            <th><button class="btn btn-info" ng-click="redirectAdd()">Додати</button></th>
+            <th>Назва</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="data in lessons">
+            <td>{{data.id}}</td>
+            <td>{{data.name}}</td>
+            <td><button class="btn btn-info" ng-click="redirectEdit(data.id)">Редагувати</button></td>
+            <td><button class="btn btn-danger" ng-click="redirectDelete(data.id)">Видалити</button></td>
+        </tr>
+    </table>
+
+</div>
+
+<script>
+var app = angular.module('lessonApp', []);
+app.controller('lessonCtrl', function($scope, $http) {
+    $http.get("/api/lessons")
+    .then(function(response) {
+    $scope.lessons = response.data;
+    });
+$scope.redirectEdit = function (id){
+    window.location = "/lesson-edit?id="+id;
+}
+$scope.redirectAdd = function (){
+    window.location = "/lessonAdd.html";
+}
+$scope.redirectDelete = function (id){
+    $http.delete("/api/lessons/"+id);
+    window.location = "/lessons.html";
+}
+});
+
+</script>
+</body>
+</html>

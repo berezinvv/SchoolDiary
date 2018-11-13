@@ -1,0 +1,59 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="schoolApp" ng-controller="schoolCtrl">
+    <table class="table table-striped">
+        <tr>
+            <td>Назва</td>
+            <td><input type="text" class="form-control col-md-2" id="school.name" ng-model="school.name" value="{{school.name}}"></td>
+        </tr>
+        <tr>
+            <td>Телефон</td>
+            <td><input type="text" class="form-control col-md-2" id="school.phone" ng-model="school.phone" value="{{school.phone}}"></td>
+        </tr>
+        <td>Директор:</td>
+        <td>
+            <table class="table table-striped">
+                <tr>
+                    <select class="form-control col-md-4" width = 300px; ng-model="selectedEmployee" ng-options="employee.firstName + ' ' + employee.lastName for employee in employees">
+                    </select>
+                </tr>
+            </table>
+        </td>
+        <tr>
+            <td></td>
+            <td>
+                <button class="btn btn-info" ng-click="redirectEdit()">Додати</button>
+            </td>
+        </tr>
+    </table>
+</div>
+<script>
+    var app = angular.module('schoolApp', []);
+    app.controller('schoolCtrl', function($scope, $http) {
+
+    $http.get("/api/employees")
+    .then(function(response) {
+    $scope.employees = response.data;
+    });
+
+    $scope.redirectEdit = function (){
+        var dataObj = {
+                id : 0,
+				name : $scope.school.name,
+				phone : $scope.school.phone,
+				director : $scope.selectedEmployee
+		};
+		$http.post('/api/schools', dataObj);
+
+		window.location = "/schools.html";
+    }
+    });
+</script>
+</body>
+</html>

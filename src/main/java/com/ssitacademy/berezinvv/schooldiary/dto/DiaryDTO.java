@@ -11,10 +11,10 @@ public class DiaryDTO {
 
     private long id;
     private Date date;
-    private ClassGroup classGroup;
-    private Lesson lesson;
-    private Employee teacher;
-    private Pupil pupil;
+    private ClassGroupShortDTO classGroup;
+    private LessonDTO lesson;
+    private EmployeeDTO teacher;
+    private PupilDTO pupil;
     private int grade;
 
     public DiaryDTO() {
@@ -36,35 +36,35 @@ public class DiaryDTO {
         this.date = date;
     }
 
-    public ClassGroup getClassGroup() {
+    public ClassGroupShortDTO getClassGroup() {
         return classGroup;
     }
 
-    public void setClassGroup(ClassGroup classGroup) {
+    public void setClassGroup(ClassGroupShortDTO classGroup) {
         this.classGroup = classGroup;
     }
 
-    public Lesson getLesson() {
+    public LessonDTO getLesson() {
         return lesson;
     }
 
-    public void setLesson(Lesson lesson) {
+    public void setLesson(LessonDTO lesson) {
         this.lesson = lesson;
     }
 
-    public Employee getTeacher() {
+    public EmployeeDTO getTeacher() {
         return teacher;
     }
 
-    public void setTeacher(Employee teacher) {
+    public void setTeacher(EmployeeDTO teacher) {
         this.teacher = teacher;
     }
 
-    public Pupil getPupil() {
+    public PupilDTO getPupil() {
         return pupil;
     }
 
-    public void setPupil(Pupil pupil) {
+    public void setPupil(PupilDTO pupil) {
         this.pupil = pupil;
     }
 

@@ -2,9 +2,11 @@ package com.ssitacademy.berezinvv.schooldiary.dto;
 
 
 import com.ssitacademy.berezinvv.schooldiary.model.Employee;
+import com.ssitacademy.berezinvv.schooldiary.model.Pupil;
 import com.ssitacademy.berezinvv.schooldiary.model.School;
 
 import java.sql.Date;
+import java.util.Set;
 
 public class ClassGroupDTO {
 
@@ -13,16 +15,18 @@ public class ClassGroupDTO {
     private Date beginTime;
     private EmployeeDTO teacher;
     private SchoolDTO school;
+    private Set<PupilDTO> pupils;
 
     public ClassGroupDTO() {
     }
 
-    public ClassGroupDTO(long id, String name, Date beginTime, EmployeeDTO teacher, SchoolDTO school) {
+    public ClassGroupDTO(long id, String name, Date beginTime, EmployeeDTO teacher, SchoolDTO school, Set<PupilDTO> pupils) {
         this.id = id;
         this.name = name;
         this.beginTime = beginTime;
         this.teacher = teacher;
         this.school = school;
+        this.pupils = pupils;
     }
 
     public long getId() {
@@ -63,5 +67,13 @@ public class ClassGroupDTO {
 
     public void setSchool(SchoolDTO school) {
         this.school = school;
+    }
+
+    public Set<PupilDTO> getPupils() {
+        return pupils;
+    }
+
+    public void setPupils(Set<PupilDTO> pupils) {
+        this.pupils = pupils;
     }
 }

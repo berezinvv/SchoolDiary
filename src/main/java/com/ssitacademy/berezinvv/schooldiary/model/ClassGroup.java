@@ -46,6 +46,11 @@ public class ClassGroup {
         this.school = school;
     }
 
+    public ClassGroup(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public long getId() {
         return id;
     }

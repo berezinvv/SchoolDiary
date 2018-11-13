@@ -1,0 +1,55 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+    <link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="scheduleApp" ng-controller="scheduleCtrl">
+    <button class="btn btn-info" ng-click="redirectAdd()">Додати</button>
+    <table class = "table  table-bordered">
+        <tr>
+            <th >День</th>
+            <th>п/н</th>
+            <th>Урок</th>
+            <th>Вчитель</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="data in schedules">
+            <td>{{data.day}}</td>
+            <td>{{data.indexNumber}}</td>
+            <td>{{data.lesson.name}}</td>
+            <td>{{data.teacher.firstName}} {{data.teacher.lastName}}</td>
+            <td><button class="btn btn-info" ng-click="redirectEdit(data.id)">Редагувати</button></td>
+            <td><button class="btn btn-danger" ng-click="redirectDelete(data.id)">Видалити</button></td>
+        </tr>
+    </table>
+
+</div>
+
+<script>
+var id = location.search.split('id=')[1];
+var app = angular.module('scheduleApp', []);
+app.controller('scheduleCtrl', function($scope, $http) {
+    $http.get("/api/schedules/class-group/"+id)
+    .then(function(response) {
+        $scope.schedules = response.data;
+        console.log($scope.schedules);
+    })
+    $scope.redirectEdit = function (id){
+        window.location = "/schedule-edit?id="+id;
+    }
+    $scope.redirectAdd = function (){
+        window.location = "/scheduleAdd.html?id="+id;
+    }
+    $scope.redirectDelete = function (id){
+        $http.delete("/api/schedules/"+id);
+        window.location = "/schedules?id="+id;
+    }
+});
+
+</script>
+</body>
+</html>

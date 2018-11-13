@@ -23,6 +23,9 @@ public class School {
     public School() {
     }
 
+    public School(long id, String name) {
+    }
+
     public long getId() {
         return id;
     }

@@ -1,0 +1,100 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="classGroupApp" ng-controller="classGroupCtrl">
+    <table class="table table-striped">
+        <tr>
+            <td>Школа</td>
+            <td><select class="form-control col-md-4" ng-model="selectedSchool" ng-options="data.name for data in schools">
+            </select></td>
+        </tr>
+        <tr>
+            <td>Назва</td>
+            <td><input type="text" class="form-control col-md-2" id="name" ng-model="classGroup.name"></td>
+        </tr>
+        <tr>
+            <td>Початок навчання</td>
+            <td><input type="text" class="form-control col-md-2" id="beginTime" ng-model="classGroup.beginTime"></td>
+        </tr>
+        <tr>
+            <td>Класний керівник</td>
+            <td><select class="form-control col-md-4" ng-model="selectedTeacher" ng-init="selectedTeacher = classGroup.teacher" ng-options="data.firstName + ' ' + data.lastName for data in employees">
+            </select></td>
+        </tr>
+        <tr>
+            <td>Учні</td>
+            <td>
+                <select class="form-control col-md-4" ng-model="selectedPupil" ng-options="data.firstName + ' ' + data.lastName for data in allPupils">
+                </select>
+                <button class="btn btn-info" ng-click="redirectAdd(selectedPupil)">Додати</button>
+                <table class="table table-striped">
+                    <tr>
+                        <th></th>
+                        <th>Прізвище</th>
+                        <th>Ім'я</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="data in pupils">
+                        <td>{{data.id}}</td>
+                        <td>{{data.firstName}}</td>
+                        <td>{{data.lastName}}</td>
+                        <td><button class="btn btn-danger" ng-click="redirectDelete($index)">Видалити</button></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button class="btn btn-info" ng-click="redirectEdit(pupils)">Редагувати</button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    var app = angular.module('classGroupApp', []);
+    app.controller('classGroupCtrl', function($scope, $http) {
+        $http.get("/api/employees")
+            .then(function(response) {
+            $scope.employees = response.data;
+        })
+        $http.get("/api/pupils")
+            .then(function(response) {
+            $scope.allPupils = response.data;
+        })
+        $http.get('/api/schools')
+            .then(function(response) {
+            $scope.schools = response.data;
+        })
+        $scope.pupils = [];
+
+        $scope.redirectEdit = function (pupils){
+        console.log($scope);
+            var dataObj = {
+                id : 0,
+				name : $scope.classGroup.name,
+				beginTime : $scope.classGroup.beginTime,
+				teacher : $scope.selectedTeacher,
+				school: $scope.selectedSchool,
+				pupils : pupils
+		    }
+		    $http.post('/api/classes', dataObj);
+		    window.location = "/class-groups?id="+$scope.selectedSchool.id;
+        }
+        $scope.redirectDelete = function ($index){
+            $scope.pupils.splice($index,1);
+        }
+        $scope.redirectAdd = function (data){
+            $scope.pupils.push(data);
+        }
+    });
+</script>
+
+</body>
+</html>

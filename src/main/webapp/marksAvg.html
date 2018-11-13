@@ -1,0 +1,81 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div ng-app="pupilApp" ng-controller="pupilCtrl">
+    <table class="table table-striped">
+        <tr>
+            <td>Ім'я</td>
+            <td>
+                <label type="text" id="firstName">
+                    <h3>{{pupil.firstName}}</h3>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>Прізвище</td>
+            <td>
+                <label type="text" id="lastName">
+                    <h3>{{pupil.lastName}}</h3>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>Оцінки</td>
+            <td>
+                <b>Період початок</b>
+                <input type="date" id="dateFrom" dataformatas="dd-MM-YYYY" ng-model="dateFrom">
+                <b>кінец</b>
+                <input type="date" id="dateTo" ng-model="dateTo">
+                <button class="btn btn-info" ng-click="redirectCalc()">Отримати</button>
+                <table class="table table-striped">
+                    <tr>
+                        <td>Урок</td>
+                        <td>Оцінка</td>
+                    </tr>
+                    <tr ng-repeat="data in marks">
+                        <td>{{data.lesson.name}}</td>
+                        <td>{{data.grade}}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    var id = location.search.split('id=')[1];
+    var app = angular.module('pupilApp', []);
+    app.controller('pupilCtrl', function($scope, $http) {
+        $http.get("/api/pupils/"+id)
+            .then(function(response) {
+        $scope.pupil = response.data;
+        })
+
+        $scope.redirectCalc = function (){
+            var dateFrom = getCorrectDate($scope.dateFrom);
+            var dateTo = getCorrectDate($scope.dateTo);
+
+            $http.get("/api/avgdiaries-pupil/"+id + "?periodFrom=" + dateFrom + "&periodTo=" + dateTo)
+            .then(function(response) {
+            $scope.marks = response.data;
+            console.log($scope.marks);
+        })}
+    });
+
+    function getCorrectDate(inputDate){
+        var date = new Date(inputDate);
+        var month = date.getMonth();
+        var day = date.getDate();
+        var year = date.getFullYear();
+        var formatDate = day + "-" + month + "-" + year;
+        return formatDate;
+    }
+</script>
+
+</body>
+</html>

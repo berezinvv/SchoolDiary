@@ -2,22 +2,60 @@
 <head>
     <meta charset="utf-8">
 </head>
-    <link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <body>
 
-<a href="schools.html" class="btn btn-secondary">Школи</a>
-<a href="employees.html" class="btn btn-secondary">Cпівробітники</a>
-
-<div ng-app="schoolApp" ng-controller="schoolCtrl">
+<div align="center">
+    <a href="schools.html" class="btn btn-warning">Школи</a>
+    <a href="employees.html" class="btn btn-warning">Cпівробітники</a>
+    <a href="pupils.html" class="btn btn-warning">Учні</a>
+    <a href="lessons.html" class="btn btn-warning">Уроки</a>
+    <a href="grade-log.html" class="btn btn-primary">Журнал оцінок</a>
+</div>
+<div align="center" ng-app="schoolApp" ng-controller="schoolCtrl">
 
     <h2>Виберіть школу:</h2>
-    <select class="form-control" width = 300px; ng-model="selectedSchool" ng-options="data.name for data in schools">
+    <select class="form-control col-md-2" width=300px; ng-model="selectedSchool" ng-click="getClassGroup()"
+            ng-options="data.name for data in schools">
     </select>
 
     <h2>Директор: {{selectedSchool.director.firstName}} {{selectedSchool.director.lastName}}</h2>
     <p>Телефон: {{selectedSchool.phone}}</p>
+    <button class="btn btn-info" ng-click="redirectAllClassBySchool(selectedSchool.id)">Класи школи</button>
+    <h2>Виберіть клас:</h2>
+    <select class="form-control col-md-1" width=300px; ng-model="selectedClass" ng-click="getPupil()"
+            ng-options="data.name for data in classes">
+    </select>
+    <button class="btn btn-info" ng-click="redirectClassEdit(selectedClass.id)">Редагувати</button>
+    <button class="btn btn-info" ng-click="redirectSchedule(selectedClass.id)">Розклад занять</button>
+
+    <h2>Учні "{{selectedClass.name}}"</h2>
+    <table class="table table-striped">
+        <tr>
+            <th></th>
+            <th>Прізвище</th>
+            <th>Ім'я</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="data in pupils">
+            <td>{{data.id}}</td>
+            <td>{{data.firstName}}</td>
+            <td>{{data.lastName}}</td>
+            <td>
+                <button class="btn btn-info" ng-click="redirectEdit(data.id)">Редагувати</button>
+            </td>
+            <td>
+                <button class="btn btn-success" ng-click="redirectMarks(data.id)">Оцінки</button>
+            </td>
+            <td>
+                <button class="btn btn-success" ng-click="redirectAvg(data.id)">Середня оцінка</button>
+            </td>
+        </tr>
+    </table>
 
 </div>
 
@@ -27,8 +65,43 @@ app.controller('schoolCtrl', function($scope, $http) {
     $http.get("/api/schools")
     .then(function(response) {
     $scope.schools = response.data;
-    });
+    })
+    $scope.getClassGroup = function (){
+        var school_id = $scope.selectedSchool.id;
+
+		$http.get('/api/classesBySchool/' + school_id)
+        .then(function(response) {
+            $scope.classes = response.data;
+        })
+    }
+    $scope.getPupil = function (){
+        var class_id = $scope.selectedClass.id;
+
+		$http.get('/api/pupilClassGroup/' + class_id)
+        .then(function(response) {
+        $scope.pupils = response.data;
+    })
+    }
+    $scope.redirectEdit = function (id){
+        window.location = "/pupil-edit?id="+id;
+    }
+    $scope.redirectClassEdit = function (id){
+        window.location = "/class-group-edit?id="+id;
+    }
+    $scope.redirectMarks = function (id){
+        window.location = "/marks?id="+id;
+    }
+    $scope.redirectAvg = function (id){
+        window.location = "/marks-avg?id="+id;
+    }
+    $scope.redirectAllClassBySchool = function (id){
+        window.location = "/class-groups?id="+id;
+    }
+    $scope.redirectSchedule = function (id){
+        window.location = "/schedules?id="+id;
+    }
 });
+
 </script>
 
 </body>

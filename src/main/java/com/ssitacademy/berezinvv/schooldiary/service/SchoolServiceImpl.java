@@ -1,9 +1,6 @@
 package com.ssitacademy.berezinvv.schooldiary.service;
 
-import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
 import com.ssitacademy.berezinvv.schooldiary.model.School;
-import com.ssitacademy.berezinvv.schooldiary.repository.ClassGroupRepository;
-import com.ssitacademy.berezinvv.schooldiary.repository.ScheduleRepository;
 import com.ssitacademy.berezinvv.schooldiary.repository.SchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

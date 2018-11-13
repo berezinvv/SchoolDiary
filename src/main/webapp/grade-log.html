@@ -1,0 +1,122 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+    <link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../resources/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+
+<div align="center" ng-app="schoolApp" ng-controller="schoolCtrl">
+
+    <h2>Виберіть школу:</h2>
+    <select class="form-control col-md-2" width = 300px; id="selectedSchool" ng-model="selectedSchool" ng-change="getClassGroup()" ng-options="data.name for data in schools">
+    </select>
+
+    <h2>Виберіть клас:</h2>
+    <select class="form-control col-md-1" width = 300px; id="selectedClass" ng-model="selectedClass" ng-options="data.name for data in classes">
+    </select>
+
+    <h2>Дата</h2>
+    <input type="date" id="dateCurrent" dataformatas="dd-MM-YYYY"  ng-change="getLesson()" ng-model="dateCurrent">
+
+    <h2>Виберіть урок:</h2>
+    <select class="form-control col-md-2" width = 300px; ng-model="selectedLesson" ng-change="getDiaryAndPupils()" ng-options="data.lesson.name for data in schedules">
+    </select>
+    <h2>Вчитель {{selectedLesson.teacher.firstName}} {{selectedLesson.teacher.lastName}}</h2>
+    <h2>Учні "{{selectedClass.name}}"</h2>
+    <table class = "table table-striped">
+        <tr>
+            <th></th>
+            <th>Прізвище</th>
+            <th>Ім'я</th>
+            <th>Оцінка</th>
+        </tr>
+        <tr ng-repeat="data in diaries">
+            <td>{{data.pupil.id}}</td>
+            <td>{{data.pupil.firstName}}</td>
+            <td>{{data.pupil.lastName}}</td>
+            <td><input type="number" id="data.grade" ng-model="data.grade" min="1" max="12" value="{{data.grade}}"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
+                <button class="btn btn-info" ng-click="redirectSave(diaries)">Зберегти</button>
+            </td>
+            <td></td>
+    </table>
+</div>
+
+<script>
+var app = angular.module('schoolApp', []);
+app.controller('schoolCtrl', function($scope, $http) {
+    $http.get("/api/schools")
+        .then(function(response) {
+        $scope.schools = response.data;
+    })
+    $scope.getClassGroup = function (){
+        var school_id = $scope.selectedSchool.id;
+        $http.get('/api/classesBySchool/' + school_id)
+        .then(function(response) {
+            $scope.classes = response.data;
+        })
+    }
+    $scope.getLesson = function (){
+        var class_id = $scope.selectedClass.id;
+        var weekday = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+        var dayOfWeek = weekday[$scope.dateCurrent.getDay()];
+
+		$http.get('/api/schedules/class-group/' + class_id+'/day/' + dayOfWeek)
+        .then(function(response) {
+        $scope.schedules = response.data;
+        $scope.diaries = [];
+    })
+    }
+    $scope.getDiaryAndPupils = function (){
+        var class_id = $scope.selectedClass.id;
+        var lesson_id = $scope.selectedLesson.lesson.id;
+        var teacher_id = $scope.selectedLesson.teacher.id;
+        var curDate = getCorrectDate($scope.dateCurrent);
+        $http.get('/api/diaries/date/' + curDate + '/lesson/' + lesson_id + '/class-group/'+class_id + '/teacher/' + teacher_id)
+        .then(function(response) {
+            $scope.diaries = response.data;
+    })
+    }
+    $scope.redirectSave = function (data){
+        console.log(data);
+        $http.post('/api/diaries', data);
+		window.location = "/";
+        }
+    $scope.redirectEdit = function (id){
+        window.location = "/pupil-edit?id="+id;
+    }
+    $scope.redirectClassEdit = function (id){
+        window.location = "/class-group-edit?id="+id;
+    }
+    $scope.redirectMarks = function (id){
+        window.location = "/marks?id="+id;
+    }
+    $scope.redirectAvg = function (id){
+        window.location = "/marks-avg?id="+id;
+    }
+    $scope.redirectAllClassBySchool = function (id){
+        window.location = "/class-groups?id="+id;
+    }
+    $scope.redirectSchedule = function (id){
+        window.location = "/schedules?id="+id;
+    }
+});
+    function getCorrectDate(inputDate){
+        var date = new Date(inputDate);
+        var month = date.getMonth()+1;
+        var day = date.getDate();
+        var year = date.getFullYear();
+
+        var formatDate = (day > 9 ? '' : '0') + day + "-" + (month > 9 ? '' : '0') + month + "-" + year;
+        return formatDate;
+    }
+</script>
+
+</body>
+</html>

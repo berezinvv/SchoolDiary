@@ -1,6 +1,7 @@
 package com.ssitacademy.berezinvv.schooldiary.model;
 
 import javax.persistence.*;
+import java.time.DayOfWeek;
 
 @Entity
 @Table(name = "Schedule")
@@ -15,7 +16,7 @@ public class Schedule {
     private ClassGroup classGroup;
     @Column(name = "day", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Day day;
+    private DayOfWeek day;
     @ManyToOne
     @JoinColumn(name = "teacher_id", nullable = false)
     private Employee teacher;
@@ -26,7 +27,7 @@ public class Schedule {
     public Schedule() {
     }
 
-    public Schedule(long id, int indexNumber, ClassGroup classGroup, Day day, Employee teacher, Lesson lesson) {
+    public Schedule(long id, int indexNumber, ClassGroup classGroup, DayOfWeek day, Employee teacher, Lesson lesson) {
         this.id = id;
         this.indexNumber = indexNumber;
         this.classGroup = classGroup;
@@ -59,11 +60,11 @@ public class Schedule {
         this.classGroup = classGroup;
     }
 
-    public Day getDay() {
+    public DayOfWeek getDay() {
         return day;
     }
 
-    public void setDay(Day day) {
+    public void setDay(DayOfWeek day) {
         this.day = day;
     }
 

@@ -26,7 +26,7 @@ public class LessonController {
     ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping(value = "/lessons", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "View a list of available Lesson", response = Iterable.class)
+    @ApiOperation(value = "View a list of available Lesson", response = LessonDTO.class, responseContainer="List")
     public ResponseEntity<List<LessonDTO>> findAll() {
         List<Lesson> lessons = lessonService.findAll();
 
@@ -35,16 +35,16 @@ public class LessonController {
     }
 
     @PostMapping(value = "/lessons")
-    @ApiOperation(value = "Adding new Lesson", response = Iterable.class)
+    @ApiOperation(value = "Adding new Lesson", response = LessonDTO.class)
     ResponseEntity<LessonDTO> newLesson(@RequestBody LessonDTO newLessonDTO) {
         Lesson lesson = modelMapper.map(newLessonDTO, Lesson.class);
         lessonService.create(lesson);
         LessonDTO lessonDTO = modelMapper.map(lesson, LessonDTO.class);
-        return new ResponseEntity<>(lessonDTO, HttpStatus.OK);
+        return new ResponseEntity<>(lessonDTO, HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/lessons/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "View one available Lesson", response = Iterable.class)
+    @ApiOperation(value = "View one available Lesson", response = LessonDTO.class)
     ResponseEntity<LessonDTO> findOne(@PathVariable Long id) {
         Lesson lesson = lessonService.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException(id, "lesson"));
@@ -54,11 +54,11 @@ public class LessonController {
     }
 
     @PutMapping(value = "/lessons/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Replace one available Lesson", response = Iterable.class)
+    @ApiOperation(value = "Replace one available Lesson", response = LessonDTO.class)
     ResponseEntity<LessonDTO> replaceLesson(@RequestBody LessonDTO newLessonDTO, @PathVariable Long id) {
         Lesson lesson = modelMapper.map(newLessonDTO, Lesson.class);
         lesson.setId(id);
-        lessonService.create(lesson);
+        lessonService.update(lesson);
 
         LessonDTO lessonDTO = modelMapper.map(lesson, LessonDTO.class);
 
@@ -66,7 +66,7 @@ public class LessonController {
     }
 
     @DeleteMapping(value = "/lessons/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Delete one available Lesson", response = Iterable.class)
+    @ApiOperation(value = "Delete one available Lesson", response = String.class)
     ResponseEntity<String> deleteLesson(@PathVariable Long id) {
         lessonService.delete(id);
         return new ResponseEntity<String>("{\"info\": \"DELETE Response\"}", HttpStatus.OK);

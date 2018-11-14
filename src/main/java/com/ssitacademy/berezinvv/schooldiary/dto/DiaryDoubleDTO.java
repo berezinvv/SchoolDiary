@@ -5,7 +5,7 @@ import com.ssitacademy.berezinvv.schooldiary.model.Employee;
 import com.ssitacademy.berezinvv.schooldiary.model.Lesson;
 import com.ssitacademy.berezinvv.schooldiary.model.Pupil;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class DiaryDoubleDTO {
 

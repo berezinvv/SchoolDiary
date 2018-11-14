@@ -1,7 +1,7 @@
 package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
 import com.ssitacademy.berezinvv.schooldiary.dto.LessonDTO;
-import com.ssitacademy.berezinvv.schooldiary.exception.ServiceNotFoundException;
+import com.ssitacademy.berezinvv.schooldiary.exception.SchoolDiaryEntiryNotFoundException;
 import com.ssitacademy.berezinvv.schooldiary.model.Lesson;
 import com.ssitacademy.berezinvv.schooldiary.service.LessonService;
 import io.swagger.annotations.ApiOperation;
@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +46,7 @@ public class LessonController {
     @ApiOperation(value = "View one available Lesson", response = LessonDTO.class)
     ResponseEntity<LessonDTO> findOne(@PathVariable Long id) {
         Lesson lesson = lessonService.findById(id)
-                .orElseThrow(() -> new ServiceNotFoundException(id, "lesson"));
+                .orElseThrow(() -> new SchoolDiaryEntiryNotFoundException(id, "lesson"));
 
         LessonDTO lessonDTO = modelMapper.map(lesson, LessonDTO.class);
         return new ResponseEntity<>(lessonDTO, HttpStatus.OK);

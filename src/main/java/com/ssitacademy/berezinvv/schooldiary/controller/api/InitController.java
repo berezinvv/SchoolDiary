@@ -1,6 +1,6 @@
 package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
-import com.ssitacademy.berezinvv.schooldiary.exception.ServiceNotFoundException;
+import com.ssitacademy.berezinvv.schooldiary.exception.SchoolDiaryEntiryNotFoundException;
 import com.ssitacademy.berezinvv.schooldiary.model.*;
 import com.ssitacademy.berezinvv.schooldiary.repository.*;
 import com.ssitacademy.berezinvv.schooldiary.service.ClassGroupService;
@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Date;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -213,7 +211,7 @@ public class InitController {
         Date sqlStartDate = new java.sql.Date(dt1.getTime());
         String finalDay = sdf.format(dt1).toUpperCase();
 
-        ClassGroup classGroup = classGroupService.findById(1L).orElseThrow(() -> new ServiceNotFoundException(1L, "schedule"));
+        ClassGroup classGroup = classGroupService.findById(1L).orElseThrow(() -> new SchoolDiaryEntiryNotFoundException(1L, "schedule"));
         List<Schedule> schedules = scheduleRepository.findAllByClassGroupAndDay(classGroup, DayOfWeek.valueOf(finalDay));
         List<Pupil> pupils = pupilRepository.findAllPupilByClassGroup(classGroup);
 

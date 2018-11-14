@@ -1,7 +1,7 @@
 package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
 import com.ssitacademy.berezinvv.schooldiary.dto.ScheduleDTO;
-import com.ssitacademy.berezinvv.schooldiary.exception.ServiceNotFoundException;
+import com.ssitacademy.berezinvv.schooldiary.exception.SchoolDiaryEntiryNotFoundException;
 import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
 import com.ssitacademy.berezinvv.schooldiary.model.Schedule;
 import com.ssitacademy.berezinvv.schooldiary.service.ClassGroupService;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +35,7 @@ public class ScheduleController {
                                                                  @PathVariable String day) {
 
         ClassGroup classGroup = classGroupService.findById(id)
-                .orElseThrow(() -> new ServiceNotFoundException(id, "class group"));
+                .orElseThrow(() -> new SchoolDiaryEntiryNotFoundException(id, "class group"));
 
         List<Schedule> schedules = scheduleService.findAllByClassGroupAndDay(classGroup, DayOfWeek.valueOf(day));
 
@@ -50,7 +49,7 @@ public class ScheduleController {
     public ResponseEntity<List<ScheduleDTO>> findAllByClassGroup(@PathVariable Long id) {
 
         ClassGroup classGroup = classGroupService.findById(id)
-                .orElseThrow(() -> new ServiceNotFoundException(id, "class group"));
+                .orElseThrow(() -> new SchoolDiaryEntiryNotFoundException(id, "class group"));
         List<Schedule> schedules = scheduleService.findAllByClassGroup(classGroup);
 
         List<ScheduleDTO> schedulesDTO = schedules.stream().map(schedule->modelMapper.map(schedule, ScheduleDTO.class)).collect(Collectors.toList());
@@ -82,7 +81,7 @@ public class ScheduleController {
     public ResponseEntity<ScheduleDTO> findOne(@PathVariable Long id) {
 
         Schedule schedule = scheduleService.findById(id)
-                .orElseThrow(() -> new ServiceNotFoundException(id, "schedule"));
+                .orElseThrow(() -> new SchoolDiaryEntiryNotFoundException(id, "schedule"));
 
         ScheduleDTO scheduleDTO = modelMapper.map(schedule, ScheduleDTO.class);
         return new ResponseEntity<>(scheduleDTO, HttpStatus.OK);

@@ -7,6 +7,7 @@ import com.ssitacademy.berezinvv.schooldiary.model.Lesson;
 import com.ssitacademy.berezinvv.schooldiary.model.Pupil;
 import com.ssitacademy.berezinvv.schooldiary.repository.DiaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -37,6 +38,11 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public List<Diary> findAll() {
         return diaryRepository.findAll();
+    }
+
+    @Override
+    public List<Diary> findAllByPupil(Pupil pupil, Pageable pageable) {
+        return diaryRepository.findAllByPupil(pupil, pageable);
     }
 
     @Override

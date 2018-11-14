@@ -1,11 +1,6 @@
 package com.ssitacademy.berezinvv.schooldiary.dto;
 
-import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
-import com.ssitacademy.berezinvv.schooldiary.model.Employee;
-import com.ssitacademy.berezinvv.schooldiary.model.Lesson;
-import com.ssitacademy.berezinvv.schooldiary.model.Pupil;
-
-import java.sql.Date;
+import java.util.Date;
 
 public class DiaryDTO {
 
@@ -18,6 +13,16 @@ public class DiaryDTO {
     private int grade;
 
     public DiaryDTO() {
+    }
+
+    public DiaryDTO(long id, Date date, ClassGroupShortDTO classGroup, LessonDTO lesson, EmployeeDTO teacher, PupilDTO pupil, int grade) {
+        this.id = id;
+        this.date = date;
+        this.classGroup = classGroup;
+        this.lesson = lesson;
+        this.teacher = teacher;
+        this.pupil = pupil;
+        this.grade = grade;
     }
 
     public long getId() {

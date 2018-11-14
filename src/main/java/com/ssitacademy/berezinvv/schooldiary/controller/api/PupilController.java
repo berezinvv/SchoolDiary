@@ -2,14 +2,11 @@ package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
 import com.ssitacademy.berezinvv.schooldiary.dto.ClassGroupDTO;
 import com.ssitacademy.berezinvv.schooldiary.dto.PupilDTO;
-import com.ssitacademy.berezinvv.schooldiary.dto.ScheduleDTO;
-import com.ssitacademy.berezinvv.schooldiary.exception.ServiceNotFoundException;
+import com.ssitacademy.berezinvv.schooldiary.exception.SchoolDiaryEntiryNotFoundException;
 import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
 import com.ssitacademy.berezinvv.schooldiary.model.Pupil;
-import com.ssitacademy.berezinvv.schooldiary.model.Schedule;
 import com.ssitacademy.berezinvv.schooldiary.service.ClassGroupService;
 import com.ssitacademy.berezinvv.schooldiary.service.PupilService;
-import com.ssitacademy.berezinvv.schooldiary.service.ScheduleService;
 import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +33,7 @@ public class PupilController {
     @ApiOperation(value = "View a list of available Pupil by ClassGroup", response = PupilDTO.class, responseContainer="List")
     public ResponseEntity<List<PupilDTO>> findPupilByClassGroupId(@PathVariable Long id) {
         ClassGroup classGroup = classGroupService.findById(id)
-                .orElseThrow(() -> new ServiceNotFoundException(id, "class group"));
+                .orElseThrow(() -> new SchoolDiaryEntiryNotFoundException(id, "class group"));
         List<Pupil> pupils = pupilService.findAllPupilByClassGroup(classGroup);
         pupils.sort(Comparator.comparingLong(p -> p.getId()));
         List<PupilDTO> pupilsDTO = pupils.stream().map(pupil -> modelMapper.map(pupil, PupilDTO.class)).collect(Collectors.toList());
@@ -48,7 +45,7 @@ public class PupilController {
     @ApiOperation(value = "View a list of available ClassGroup by Pupil", response = PupilDTO.class, responseContainer="List")
     public ResponseEntity<List<ClassGroupDTO>> getClassGroupsByPupilId(@PathVariable Long id) {
         Pupil pupil = pupilService.findById(id)
-                .orElseThrow(() -> new ServiceNotFoundException(id, "pupil"));
+                .orElseThrow(() -> new SchoolDiaryEntiryNotFoundException(id, "pupil"));
         List<ClassGroup> classGroups = classGroupService.findAllClassGroupByPupil(pupil);
 
         List<ClassGroupDTO> classGroupsDTO = classGroups.stream().map(classGroup -> modelMapper.map(classGroup, ClassGroupDTO.class)).collect(Collectors.toList());
@@ -78,7 +75,7 @@ public class PupilController {
     @ApiOperation(value = "View one available Pupil", response = PupilDTO.class)
     public ResponseEntity<PupilDTO> findOne(@PathVariable Long id) {
         Pupil pupil = pupilService.findById(id)
-                .orElseThrow(() -> new ServiceNotFoundException(id, "pupil"));
+                .orElseThrow(() -> new SchoolDiaryEntiryNotFoundException(id, "pupil"));
 
         PupilDTO pupilDTO = modelMapper.map(pupil, PupilDTO.class);
         return new ResponseEntity<>(pupilDTO, HttpStatus.OK);

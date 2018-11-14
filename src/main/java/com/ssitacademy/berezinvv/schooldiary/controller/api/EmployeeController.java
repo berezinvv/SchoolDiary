@@ -1,7 +1,7 @@
 package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
 import com.ssitacademy.berezinvv.schooldiary.dto.EmployeeDTO;
-import com.ssitacademy.berezinvv.schooldiary.exception.ServiceNotFoundException;
+import com.ssitacademy.berezinvv.schooldiary.exception.SchoolDiaryEntiryNotFoundException;
 import com.ssitacademy.berezinvv.schooldiary.model.Employee;
 import com.ssitacademy.berezinvv.schooldiary.service.EmployeeService;
 import io.swagger.annotations.ApiOperation;
@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +48,7 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDTO> findOne(@PathVariable Long id) {
 
         Employee employee = employeeService.findById(id)
-                .orElseThrow(() -> new ServiceNotFoundException(id, "employee"));
+                .orElseThrow(() -> new SchoolDiaryEntiryNotFoundException(id, "employee"));
 
         EmployeeDTO employeeDTO = modelMapper.map(employee, EmployeeDTO.class);
         return new ResponseEntity<>(employeeDTO, HttpStatus.OK);

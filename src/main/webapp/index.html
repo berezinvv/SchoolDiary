@@ -89,7 +89,7 @@ app.controller('schoolCtrl', function($scope, $http) {
         window.location = "/class-group-edit?id="+id;
     }
     $scope.redirectMarks = function (id){
-        window.location = "/marks?id="+id;
+        window.location = "/marks?id="+id+"&page=0&size=10";
     }
     $scope.redirectAvg = function (id){
         window.location = "/marks-avg?id="+id;

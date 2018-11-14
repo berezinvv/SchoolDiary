@@ -27,6 +27,9 @@
         <tr>
             <td>Оцінки</td>
             <td>
+                <button class="btn btn-success" ng-disabled="{{pageNumber === 1 ? true : false}}" ng-click="redirectPageLeft(pageNumber, pageSize)"><</button>
+                <b>Сторінка {{pageNumber}}</b>
+                <button class="btn btn-success" ng-click="redirectPageRight(pageNumber, pageSize)">></button>
                 <table class="table table-striped">
                     <tr>
                         <td>Дата</td>
@@ -45,22 +48,31 @@
 </div>
 
 <script>
-    var id = location.search.split('id=')[1];
+    var id = location.search.split('=')[1].split('&')[0];
+    var page = location.search.split('=')[2].split('&')[0];
+    var size = location.search.split('=')[3];
     var app = angular.module('pupilApp', []);
+
     app.controller('pupilCtrl', function($scope, $http) {
         $http.get("/api/pupils/"+id)
             .then(function(response) {
         $scope.pupil = response.data;
         })
-        $http.get("/api/diary/"+id)
+
+        $scope.pageNumber = parseInt(page)+1;
+        $scope.pageSize = size;
+        $http.get("/api/diary/"+id+"?page=" + page + "&size=" + size)
             .then(function(response) {
-        $scope.marks = response.data;
+            $scope.marks = response.data;
         })
+        $scope.redirectPageRight = function (pageNumber, pageSize){
+            window.location = "/marks?id="+id+"&page=" + pageNumber + "&size=" + pageSize;
+        }
+        $scope.redirectPageLeft = function (pageNumber, pageSize){
+            pageNumber = pageNumber - 2;
+            window.location = "/marks?id="+id+"&page=" + pageNumber + "&size=" + pageSize;
+        }
     });
-
-
-
-
 </script>
 
 </body>

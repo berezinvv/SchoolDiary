@@ -1,0 +1,11 @@
+language: java
+jdk: oraclejdk8
+
+script:
+    mvn test -B
+
+services:
+  - postgresql
+  
+before_script:
+  - psql -c 'create database schooldiary;' -U postgres

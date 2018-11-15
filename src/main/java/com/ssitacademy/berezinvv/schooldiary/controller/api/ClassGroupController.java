@@ -2,7 +2,7 @@ package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
 import com.ssitacademy.berezinvv.schooldiary.dto.ClassGroupDTO;
 import com.ssitacademy.berezinvv.schooldiary.dto.ScheduleDTO;
-import com.ssitacademy.berezinvv.schooldiary.exception.SchoolDiaryEntiryNotFoundException;
+import com.ssitacademy.berezinvv.schooldiary.exception.EntityNotFoundSchoolDiaryException;
 import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
 import com.ssitacademy.berezinvv.schooldiary.model.Schedule;
 import com.ssitacademy.berezinvv.schooldiary.model.School;
@@ -29,15 +29,15 @@ public class ClassGroupController {
     @Autowired
     private ScheduleService scheduleService;
     @Autowired
-    SchoolService schoolService;
+    private SchoolService schoolService;
 
-    ModelMapper modelMapper = new ModelMapper();
+    private ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping(value = "/classesSchedule/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "View a list of available Schedule by ClassGroup", response = ScheduleDTO.class, responseContainer="List")
     public ResponseEntity<List<ScheduleDTO>> getScheduleByClassGroupId(@PathVariable Long id) {
         ClassGroup classGroup = classGroupService.findById(id)
-                .orElseThrow(() -> new SchoolDiaryEntiryNotFoundException(id, "schedule"));
+                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "schedule"));
         List<Schedule> schedules = scheduleService.findAllByClassGroup(classGroup);
 
         List<ScheduleDTO> schedulesDTO = schedules.stream().map(schedule -> modelMapper.map(schedule, ScheduleDTO.class)).collect(Collectors.toList());
@@ -50,7 +50,7 @@ public class ClassGroupController {
     public ResponseEntity<List<ClassGroupDTO>> getClassGroupBySchool(@PathVariable Long id) {
 
         School school = schoolService.findById(id)
-                .orElseThrow(() -> new SchoolDiaryEntiryNotFoundException(id, "school"));
+                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "school"));
         List<ClassGroup> classGroups = classGroupService.findAllBySchool(school);
 
         List<ClassGroupDTO> classGroupDTO = classGroups.stream().map(classGroup -> modelMapper.map(classGroup, ClassGroupDTO.class)).collect(Collectors.toList());
@@ -81,7 +81,7 @@ public class ClassGroupController {
     @ApiOperation(value = "View one available ClassGroup", response = ClassGroupDTO.class)
     public ResponseEntity<ClassGroupDTO> findOne(@PathVariable Long id) {
         ClassGroup classGroup = classGroupService.findById(id)
-                .orElseThrow(() -> new SchoolDiaryEntiryNotFoundException(id, "class group"));
+                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "class group"));
 
         ClassGroupDTO classGroupDTO = modelMapper.map(classGroup, ClassGroupDTO.class);
         return new ResponseEntity<>(classGroupDTO, HttpStatus.OK);

@@ -1,7 +1,7 @@
 package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
 import com.ssitacademy.berezinvv.schooldiary.dto.SchoolDTO;
-import com.ssitacademy.berezinvv.schooldiary.exception.SchoolDiaryEntiryNotFoundException;
+import com.ssitacademy.berezinvv.schooldiary.exception.EntityNotFoundSchoolDiaryException;
 import com.ssitacademy.berezinvv.schooldiary.model.School;
 import com.ssitacademy.berezinvv.schooldiary.service.SchoolService;
 import io.swagger.annotations.ApiOperation;
@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 public class SchoolController {
 
     @Autowired
-    SchoolService schoolService;
+    private SchoolService schoolService;
 
-    ModelMapper modelMapper = new ModelMapper();
+    private ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping(value = "/schools", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "View a list of available School", response = SchoolDTO.class, responseContainer="List")
@@ -46,7 +46,7 @@ public class SchoolController {
     @ApiOperation(value = "View one available School", response = SchoolDTO.class)
     public ResponseEntity<SchoolDTO> findOne(@PathVariable Long id) {
         School school = schoolService.findById(id)
-                .orElseThrow(() -> new SchoolDiaryEntiryNotFoundException(id, "school"));
+                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "school"));
 
         SchoolDTO schoolDTO = modelMapper.map(school, SchoolDTO.class);
         return new ResponseEntity<>(schoolDTO, HttpStatus.OK);

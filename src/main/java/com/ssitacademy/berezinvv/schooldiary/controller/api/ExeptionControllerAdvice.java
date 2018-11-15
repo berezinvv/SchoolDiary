@@ -2,7 +2,7 @@ package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
 
 import com.ssitacademy.berezinvv.schooldiary.dto.ErrorDTO;
-import com.ssitacademy.berezinvv.schooldiary.exception.SchoolDiaryEntiryNotFoundException;
+import com.ssitacademy.berezinvv.schooldiary.exception.EntityNotFoundSchoolDiaryException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +15,9 @@ import java.util.Date;
 public class ExeptionControllerAdvice {
 
     @ResponseBody
-    @ExceptionHandler(SchoolDiaryEntiryNotFoundException.class)
+    @ExceptionHandler(EntityNotFoundSchoolDiaryException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public final ResponseEntity<ErrorDTO> SchoolDiaryNotFoundHandler(SchoolDiaryEntiryNotFoundException ex, WebRequest request) {
+    public final ResponseEntity<ErrorDTO> SchoolDiaryNotFoundHandler(EntityNotFoundSchoolDiaryException ex, WebRequest request) {
 
         ErrorDTO errorDTO = new ErrorDTO(new Date(), ex.getMessage(),
                 request.getDescription(false));

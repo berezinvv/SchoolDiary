@@ -1,7 +1,7 @@
 package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
 import com.ssitacademy.berezinvv.schooldiary.dto.EmployeeDTO;
-import com.ssitacademy.berezinvv.schooldiary.exception.SchoolDiaryEntiryNotFoundException;
+import com.ssitacademy.berezinvv.schooldiary.exception.EntityNotFoundSchoolDiaryException;
 import com.ssitacademy.berezinvv.schooldiary.model.Employee;
 import com.ssitacademy.berezinvv.schooldiary.service.EmployeeService;
 import io.swagger.annotations.ApiOperation;
@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 public class EmployeeController {
 
     @Autowired
-    EmployeeService employeeService;
+    private EmployeeService employeeService;
 
-    ModelMapper modelMapper = new ModelMapper();
+    private ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping(value = "/employees", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "View a list of available Employee", response = EmployeeDTO.class, responseContainer="List")
@@ -48,7 +48,7 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDTO> findOne(@PathVariable Long id) {
 
         Employee employee = employeeService.findById(id)
-                .orElseThrow(() -> new SchoolDiaryEntiryNotFoundException(id, "employee"));
+                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "employee"));
 
         EmployeeDTO employeeDTO = modelMapper.map(employee, EmployeeDTO.class);
         return new ResponseEntity<>(employeeDTO, HttpStatus.OK);

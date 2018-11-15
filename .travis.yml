@@ -1,7 +1,10 @@
 language: java
 jdk: oraclejdk8
 
+install:
+  - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
+  - mvn test jacoco:report
     mvn test -B
 
 services:
@@ -10,4 +13,4 @@ services:
 before_script:
   - psql -c 'create database schooldiary;' -U postgres
 after_success: 
-  - npm run coveralls
+  - mvn clean test jacoco:report coveralls:report 

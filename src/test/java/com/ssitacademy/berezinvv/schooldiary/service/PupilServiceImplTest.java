@@ -75,14 +75,14 @@ public class PupilServiceImplTest {
 
     @Test
     public void findById_whenNonExistingIdTest() {
-        Optional<Pupil> pupil = pupilService.findById(14L);
+        Pupil pupil = pupilService.findById(14L);
         assertThat(pupil).isNull();
     }
 
     @Test
     public void testFindById_whenValidIdTest() {
-        Optional<Pupil> pupil = pupilService.findById(2L);
-        assertThat(pupil.get()).isEqualTo(pupil_2);
+        Pupil pupil = pupilService.findById(2L);
+        assertThat(pupil).isEqualTo(pupil_2);
     }
 
     @Test

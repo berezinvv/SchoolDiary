@@ -13,7 +13,7 @@ public interface ScheduleService {
 
     Schedule update(Schedule schedule);
 
-    Optional<Schedule> findById(Long id);
+    Schedule findById(Long id);
 
     List<Schedule> findAll();
 

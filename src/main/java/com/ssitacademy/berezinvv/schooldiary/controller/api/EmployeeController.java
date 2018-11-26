@@ -1,7 +1,6 @@
 package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
 import com.ssitacademy.berezinvv.schooldiary.dto.EmployeeDTO;
-import com.ssitacademy.berezinvv.schooldiary.exception.EntityNotFoundSchoolDiaryException;
 import com.ssitacademy.berezinvv.schooldiary.model.Employee;
 import com.ssitacademy.berezinvv.schooldiary.service.EmployeeService;
 import io.swagger.annotations.ApiOperation;
@@ -25,11 +24,11 @@ public class EmployeeController {
     private ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping(value = "/employees", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "View a list of available Employee", response = EmployeeDTO.class, responseContainer="List")
+    @ApiOperation(value = "View a list of available Employee", response = EmployeeDTO.class, responseContainer = "List")
     public ResponseEntity<List<EmployeeDTO>> findAll() {
         List<Employee> employees = employeeService.findAll();
 
-        List<EmployeeDTO> employeesDTO = employees.stream().map(employee->modelMapper.map(employee, EmployeeDTO.class)).collect(Collectors.toList());
+        List<EmployeeDTO> employeesDTO = employees.stream().map(employee -> modelMapper.map(employee, EmployeeDTO.class)).collect(Collectors.toList());
         return new ResponseEntity<>(employeesDTO, HttpStatus.OK);
     }
 
@@ -47,8 +46,7 @@ public class EmployeeController {
     @ApiOperation(value = "View one available Employee", response = EmployeeDTO.class)
     public ResponseEntity<EmployeeDTO> findOne(@PathVariable Long id) {
 
-        Employee employee = employeeService.findById(id)
-                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "employee"));
+        Employee employee = employeeService.findById(id);
 
         EmployeeDTO employeeDTO = modelMapper.map(employee, EmployeeDTO.class);
         return new ResponseEntity<>(employeeDTO, HttpStatus.OK);

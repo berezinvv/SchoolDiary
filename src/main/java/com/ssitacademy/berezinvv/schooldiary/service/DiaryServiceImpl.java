@@ -1,6 +1,7 @@
 package com.ssitacademy.berezinvv.schooldiary.service;
 
 import com.ssitacademy.berezinvv.schooldiary.dto.DiaryDoubleDTO;
+import com.ssitacademy.berezinvv.schooldiary.exception.EntityNotFoundSchoolDiaryException;
 import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
 import com.ssitacademy.berezinvv.schooldiary.model.Diary;
 import com.ssitacademy.berezinvv.schooldiary.model.Lesson;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DiaryServiceImpl implements DiaryService {
@@ -31,8 +31,9 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public Optional<Diary> findById(Long id) {
-        return diaryRepository.findById(id);
+    public Diary findById(Long id) {
+        return diaryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "diary"));
     }
 
     @Override

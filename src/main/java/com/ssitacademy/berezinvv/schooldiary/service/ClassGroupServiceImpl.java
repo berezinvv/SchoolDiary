@@ -1,5 +1,6 @@
 package com.ssitacademy.berezinvv.schooldiary.service;
 
+import com.ssitacademy.berezinvv.schooldiary.exception.EntityNotFoundSchoolDiaryException;
 import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
 import com.ssitacademy.berezinvv.schooldiary.model.Pupil;
 import com.ssitacademy.berezinvv.schooldiary.model.School;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ClassGroupServiceImpl implements ClassGroupService {
@@ -27,8 +27,9 @@ public class ClassGroupServiceImpl implements ClassGroupService {
     }
 
     @Override
-    public Optional<ClassGroup> findById(Long id) {
-        return classGroupRepository.findById(id);
+    public ClassGroup findById(Long id) {
+        return classGroupRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "class group"));
     }
 
     @Override

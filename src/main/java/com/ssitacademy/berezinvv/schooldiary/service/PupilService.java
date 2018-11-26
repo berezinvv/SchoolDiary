@@ -13,7 +13,7 @@ public interface PupilService {
 
     Pupil update(Pupil pupil);
 
-    Optional<Pupil> findById(Long id);
+    Pupil findById(Long id);
 
     List<Pupil> findAll();
 

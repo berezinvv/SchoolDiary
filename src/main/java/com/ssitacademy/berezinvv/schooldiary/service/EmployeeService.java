@@ -12,7 +12,7 @@ public interface EmployeeService {
 
     Employee update(Employee employee);
 
-    Optional<Employee> findById(Long id);
+    Employee findById(Long id);
 
     List<Employee> findAll();
 

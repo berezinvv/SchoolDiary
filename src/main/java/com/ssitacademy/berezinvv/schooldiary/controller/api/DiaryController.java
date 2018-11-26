@@ -2,7 +2,6 @@ package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
 import com.ssitacademy.berezinvv.schooldiary.dto.DiaryDTO;
 import com.ssitacademy.berezinvv.schooldiary.dto.DiaryDoubleDTO;
-import com.ssitacademy.berezinvv.schooldiary.exception.EntityNotFoundSchoolDiaryException;
 import com.ssitacademy.berezinvv.schooldiary.model.*;
 import com.ssitacademy.berezinvv.schooldiary.service.*;
 import io.swagger.annotations.ApiOperation;
@@ -45,10 +44,9 @@ public class DiaryController {
                                                                                 @PathVariable Long class_group_id,
                                                                                 @PathVariable Long teacher_id) {
 
-        Lesson lesson = lessonService.findById(lesson_id).orElseThrow(() -> new EntityNotFoundSchoolDiaryException(lesson_id, "lesson"));
-        ClassGroup classGroup = classGroupService.findById(class_group_id).orElseThrow(() -> new EntityNotFoundSchoolDiaryException(class_group_id, "classGroup"));
-        Employee employee = employeeService.findById(teacher_id)
-                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(teacher_id, "employee"));
+        Lesson lesson = lessonService.findById(lesson_id);
+        ClassGroup classGroup = classGroupService.findById(class_group_id);
+        Employee employee = employeeService.findById(teacher_id);
         List<Pupil> pupils = pupilService.findAllPupilByClassGroup(classGroup);
 
         Date currentDate = perseSritngToDate(date, "dd-MM-yyyy");
@@ -81,7 +79,7 @@ public class DiaryController {
     public ResponseEntity<List<DiaryDTO>> getAverageBetweenPeriodByPupil(@PathVariable Long pupil_id,
                                                                          @RequestParam String periodFrom,
                                                                          @RequestParam String periodTo) {
-        Pupil pupil = pupilService.findById(pupil_id).orElseThrow(() -> new EntityNotFoundSchoolDiaryException(pupil_id, "pupil"));
+        Pupil pupil = pupilService.findById(pupil_id);
 
         Date dateFrom = perseSritngToDate(periodFrom, "dd-MM-yyyy");
         Date dateTo = perseSritngToDate(periodTo, "dd-MM-yyyy");
@@ -101,7 +99,7 @@ public class DiaryController {
     public ResponseEntity<List<DiaryDTO>> getAverageBetweenPeriodByClassGroup(@PathVariable Long classGroup_id,
                                                                               @RequestParam String periodFrom,
                                                                               @RequestParam String periodTo) {
-        ClassGroup classGroup = classGroupService.findById(classGroup_id).orElseThrow(() -> new EntityNotFoundSchoolDiaryException(classGroup_id, "classGroup"));
+        ClassGroup classGroup = classGroupService.findById(classGroup_id);
 
         Date dateFrom = perseSritngToDate(periodFrom, "dd-MM-yyyy");
         Date dateTo = perseSritngToDate(periodTo, "dd-MM-yyyy");
@@ -116,7 +114,7 @@ public class DiaryController {
     @ApiOperation(value = "View a list of available Diary by pupil, date", response = DiaryDTO.class, responseContainer = "List")
     public ResponseEntity<List<DiaryDTO>> getAllDiaryByPupilAndDay(@PathVariable String date,
                                                                    @PathVariable Long pupil_id) {
-        Pupil pupil = pupilService.findById(pupil_id).orElseThrow(() -> new EntityNotFoundSchoolDiaryException(pupil_id, "pupil"));
+        Pupil pupil = pupilService.findById(pupil_id);
 
         Date currentDate = perseSritngToDate(date, "dd-MM-yyyy");
 
@@ -131,12 +129,12 @@ public class DiaryController {
     public ResponseEntity<List<DiaryDTO>> getAllDiaryByPupil(@PathVariable Long pupil_id,
                                                              @RequestParam int page,
                                                              @RequestParam int size) {
-        Pupil pupil = pupilService.findById(pupil_id).orElseThrow(() -> new EntityNotFoundSchoolDiaryException(pupil_id, "pupil"));
+        Pupil pupil = pupilService.findById(pupil_id);
 
         List<Diary> diaries = new ArrayList<>();
-        if (page >=0 && size > 0) {
+        if (page >= 0 && size > 0) {
             Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "date");
-                diaries = diaryService.findAllByPupil(pupil, pageable);
+            diaries = diaryService.findAllByPupil(pupil, pageable);
         }
 
         List<DiaryDTO> diariesDTO = diaries.stream().map(diary -> modelMapper.map(diary, DiaryDTO.class)).collect(Collectors.toList());
@@ -148,8 +146,8 @@ public class DiaryController {
     public ResponseEntity<List<DiaryDTO>> getAllDiaryByPupilAndDayAndLesson(@PathVariable String date,
                                                                             @PathVariable Long pupil_id,
                                                                             @PathVariable Long lesson_id) {
-        Pupil pupil = pupilService.findById(pupil_id).orElseThrow(() -> new EntityNotFoundSchoolDiaryException(pupil_id, "pupil"));
-        Lesson lesson = lessonService.findById(lesson_id).orElseThrow(() -> new EntityNotFoundSchoolDiaryException(lesson_id, "lesson"));
+        Pupil pupil = pupilService.findById(pupil_id);
+        Lesson lesson = lessonService.findById(lesson_id);
 
         Date currentDate = perseSritngToDate(date, "dd-MM-yyyy");
 
@@ -188,8 +186,7 @@ public class DiaryController {
     @ApiOperation(value = "View one available Diary", response = DiaryDTO.class)
     public ResponseEntity<DiaryDTO> findOne(@PathVariable Long id) {
 
-        Diary diary = diaryService.findById(id)
-                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "diary"));
+        Diary diary = diaryService.findById(id);
 
         DiaryDTO diaryDTO = modelMapper.map(diary, DiaryDTO.class);
         return new ResponseEntity<>(diaryDTO, HttpStatus.OK);

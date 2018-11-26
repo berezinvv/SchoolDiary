@@ -5,8 +5,6 @@ import com.ssitacademy.berezinvv.schooldiary.model.Pupil;
 import com.ssitacademy.berezinvv.schooldiary.model.School;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 public interface ClassGroupService {
 
@@ -14,7 +12,7 @@ public interface ClassGroupService {
 
     ClassGroup update(ClassGroup classGroup);
 
-    Optional<ClassGroup> findById(Long id);
+    ClassGroup findById(Long id);
 
     List<ClassGroup> findAll();
 

@@ -1,6 +1,5 @@
 package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
-import com.ssitacademy.berezinvv.schooldiary.exception.EntityNotFoundSchoolDiaryException;
 import com.ssitacademy.berezinvv.schooldiary.model.*;
 import com.ssitacademy.berezinvv.schooldiary.repository.*;
 import com.ssitacademy.berezinvv.schooldiary.service.ClassGroupService;
@@ -84,26 +83,26 @@ public class InitController {
         lessonRepository.save(lessonIndividual);
 
         //pupil
-        Pupil pupil_1 = new Pupil(1, "МИКОЛА","МЕЛЬНИК",  "", "");
-        Pupil pupil_2 = new Pupil(2, "ВОЛОДИМИР","БОЙКО",  "", "");
-        Pupil pupil_3 = new Pupil(3, "ОЛЕКСАНДР","КОВАЛЕНКО",  "", "");
-        Pupil pupil_4 = new Pupil(4, "ВАСИЛЬ","БОНДАРЕНКО", "", "");
-        Pupil pupil_5 = new Pupil(5, "ЮРІЙ","САВЧУК",  "", "");
-        Pupil pupil_6 = new Pupil(6, "МАРІЯ","КРАВЕЦЬ",  "", "");
-        Pupil pupil_7 = new Pupil(7, "НАТАЛІЯ","ДЯЧЕНКО",  "", "");
-        Pupil pupil_8 = new Pupil(8, "ВІРА","ТЕРЕЩЕНКО",  "", "");
-        Pupil pupil_9 = new Pupil(9, "САВА","МІЩЕНКО",  "", "");
-        Pupil pupil_10 = new Pupil(10, "ДАНИЛО","БАБИЧ",  "", "");
-        Pupil pupil_11 = new Pupil(11, "ЄВГЕН","БОДНАР",  "", "");
-        Pupil pupil_12 = new Pupil(12, "СВЯТОСЛАВ","АНТОНЮК",  "", "");
-        Pupil pupil_13 = new Pupil(13, "ЄВА","ЛЯШЕНКО",  "", "");
-        Pupil pupil_14 = new Pupil(14, "ВІКТОРІЯ","ІВАНЧЕНКО",  "", "");
-        Pupil pupil_15 = new Pupil(15, "ГЕННАДІЙ","ДЗЮБА",  "", "");
-        Pupil pupil_16 = new Pupil(16, "АЛЛА","МИРОНЕНКО",  "", "");
-        Pupil pupil_17 = new Pupil(17, "ТАМІЛА","ЯРОШЕНКО",  "", "");
-        Pupil pupil_18 = new Pupil(18, "ЛІНА","ВОЛКОВА",  "", "");
-        Pupil pupil_19 = new Pupil(19, "ЛІЛІЯ","ВОЛОШИНА",  "", "");
-        Pupil pupil_20 = new Pupil(20, "СОФІЯ","ШЕВЧЕНКО",  "", "");
+        Pupil pupil_1 = new Pupil(1, "МИКОЛА", "МЕЛЬНИК", "", "");
+        Pupil pupil_2 = new Pupil(2, "ВОЛОДИМИР", "БОЙКО", "", "");
+        Pupil pupil_3 = new Pupil(3, "ОЛЕКСАНДР", "КОВАЛЕНКО", "", "");
+        Pupil pupil_4 = new Pupil(4, "ВАСИЛЬ", "БОНДАРЕНКО", "", "");
+        Pupil pupil_5 = new Pupil(5, "ЮРІЙ", "САВЧУК", "", "");
+        Pupil pupil_6 = new Pupil(6, "МАРІЯ", "КРАВЕЦЬ", "", "");
+        Pupil pupil_7 = new Pupil(7, "НАТАЛІЯ", "ДЯЧЕНКО", "", "");
+        Pupil pupil_8 = new Pupil(8, "ВІРА", "ТЕРЕЩЕНКО", "", "");
+        Pupil pupil_9 = new Pupil(9, "САВА", "МІЩЕНКО", "", "");
+        Pupil pupil_10 = new Pupil(10, "ДАНИЛО", "БАБИЧ", "", "");
+        Pupil pupil_11 = new Pupil(11, "ЄВГЕН", "БОДНАР", "", "");
+        Pupil pupil_12 = new Pupil(12, "СВЯТОСЛАВ", "АНТОНЮК", "", "");
+        Pupil pupil_13 = new Pupil(13, "ЄВА", "ЛЯШЕНКО", "", "");
+        Pupil pupil_14 = new Pupil(14, "ВІКТОРІЯ", "ІВАНЧЕНКО", "", "");
+        Pupil pupil_15 = new Pupil(15, "ГЕННАДІЙ", "ДЗЮБА", "", "");
+        Pupil pupil_16 = new Pupil(16, "АЛЛА", "МИРОНЕНКО", "", "");
+        Pupil pupil_17 = new Pupil(17, "ТАМІЛА", "ЯРОШЕНКО", "", "");
+        Pupil pupil_18 = new Pupil(18, "ЛІНА", "ВОЛКОВА", "", "");
+        Pupil pupil_19 = new Pupil(19, "ЛІЛІЯ", "ВОЛОШИНА", "", "");
+        Pupil pupil_20 = new Pupil(20, "СОФІЯ", "ШЕВЧЕНКО", "", "");
 
 
         Set<Pupil> pupils = new HashSet<>();
@@ -211,7 +210,7 @@ public class InitController {
         Date sqlStartDate = new java.sql.Date(dt1.getTime());
         String finalDay = sdf.format(dt1).toUpperCase();
 
-        ClassGroup classGroup = classGroupService.findById(1L).orElseThrow(() -> new EntityNotFoundSchoolDiaryException(1L, "schedule"));
+        ClassGroup classGroup = classGroupService.findById(1L);
         List<Schedule> schedules = scheduleRepository.findAllByClassGroupAndDay(classGroup, DayOfWeek.valueOf(finalDay));
         List<Pupil> pupils = pupilRepository.findAllPupilByClassGroup(classGroup);
 
@@ -231,7 +230,7 @@ public class InitController {
                 currentDiary.setTeacher(schedule.getTeacher());
                 try {
                     diaryRepository.save(currentDiary);
-                }catch (RuntimeException e){
+                } catch (RuntimeException e) {
 
                 }
             }

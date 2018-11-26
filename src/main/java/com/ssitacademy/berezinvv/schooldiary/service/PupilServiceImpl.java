@@ -1,5 +1,6 @@
 package com.ssitacademy.berezinvv.schooldiary.service;
 
+import com.ssitacademy.berezinvv.schooldiary.exception.EntityNotFoundSchoolDiaryException;
 import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
 import com.ssitacademy.berezinvv.schooldiary.model.Pupil;
 import com.ssitacademy.berezinvv.schooldiary.repository.PupilRepository;
@@ -7,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PupilServiceImpl implements PupilService {
@@ -26,8 +26,9 @@ public class PupilServiceImpl implements PupilService {
     }
 
     @Override
-    public Optional<Pupil> findById(Long id) {
-        return pupilRepository.findById(id);
+    public Pupil findById(Long id) {
+        return pupilRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "pupil"));
     }
 
     @Override

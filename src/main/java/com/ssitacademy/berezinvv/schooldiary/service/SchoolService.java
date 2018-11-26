@@ -11,7 +11,7 @@ public interface SchoolService {
 
     School update(School school);
 
-    Optional<School> findById(Long id);
+    School findById(Long id);
 
     List<School> findAll();
 

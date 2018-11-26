@@ -1,7 +1,6 @@
 package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
 import com.ssitacademy.berezinvv.schooldiary.dto.SchoolDTO;
-import com.ssitacademy.berezinvv.schooldiary.exception.EntityNotFoundSchoolDiaryException;
 import com.ssitacademy.berezinvv.schooldiary.model.School;
 import com.ssitacademy.berezinvv.schooldiary.service.SchoolService;
 import io.swagger.annotations.ApiOperation;
@@ -25,11 +24,11 @@ public class SchoolController {
     private ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping(value = "/schools", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "View a list of available School", response = SchoolDTO.class, responseContainer="List")
+    @ApiOperation(value = "View a list of available School", response = SchoolDTO.class, responseContainer = "List")
     public ResponseEntity<List<SchoolDTO>> findAll() {
         List<School> schools = schoolService.findAll();
 
-        List<SchoolDTO> schoolsDTO = schools.stream().map(school->modelMapper.map(school, SchoolDTO.class)).collect(Collectors.toList());
+        List<SchoolDTO> schoolsDTO = schools.stream().map(school -> modelMapper.map(school, SchoolDTO.class)).collect(Collectors.toList());
         return new ResponseEntity<>(schoolsDTO, HttpStatus.OK);
     }
 
@@ -45,9 +44,7 @@ public class SchoolController {
     @GetMapping(value = "/schools/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "View one available School", response = SchoolDTO.class)
     public ResponseEntity<SchoolDTO> findOne(@PathVariable Long id) {
-        School school = schoolService.findById(id)
-                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "school"));
-
+        School school = schoolService.findById(id);
         SchoolDTO schoolDTO = modelMapper.map(school, SchoolDTO.class);
         return new ResponseEntity<>(schoolDTO, HttpStatus.OK);
     }

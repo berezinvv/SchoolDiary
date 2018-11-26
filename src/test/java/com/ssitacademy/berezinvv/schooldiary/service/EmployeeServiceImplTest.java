@@ -71,14 +71,14 @@ public class EmployeeServiceImplTest {
 
     @Test
     public void findById_whenNonExistingIdTest() {
-        Optional<Employee> employee = employeeService.findById(14L);
+        Employee employee = employeeService.findById(14L);
         assertThat(employee).isNull();
     }
 
     @Test
     public void testFindById_whenValidIdTest() {
-        Optional<Employee> employee = employeeService.findById(2L);
-        assertThat(employee.get()).isEqualTo(employee_2);
+        Employee employee = employeeService.findById(2L);
+        assertThat(employee).isEqualTo(employee_2);
     }
 
     @Test

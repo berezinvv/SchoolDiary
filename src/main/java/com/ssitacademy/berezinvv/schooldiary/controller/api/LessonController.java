@@ -1,7 +1,6 @@
 package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
 import com.ssitacademy.berezinvv.schooldiary.dto.LessonDTO;
-import com.ssitacademy.berezinvv.schooldiary.exception.EntityNotFoundSchoolDiaryException;
 import com.ssitacademy.berezinvv.schooldiary.model.Lesson;
 import com.ssitacademy.berezinvv.schooldiary.service.LessonService;
 import io.swagger.annotations.ApiOperation;
@@ -25,11 +24,11 @@ public class LessonController {
     private ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping(value = "/lessons", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "View a list of available Lesson", response = LessonDTO.class, responseContainer="List")
+    @ApiOperation(value = "View a list of available Lesson", response = LessonDTO.class, responseContainer = "List")
     public ResponseEntity<List<LessonDTO>> findAll() {
         List<Lesson> lessons = lessonService.findAll();
 
-        List<LessonDTO> lessonsDTO = lessons.stream().map(lesson->modelMapper.map(lesson, LessonDTO.class)).collect(Collectors.toList());
+        List<LessonDTO> lessonsDTO = lessons.stream().map(lesson -> modelMapper.map(lesson, LessonDTO.class)).collect(Collectors.toList());
         return new ResponseEntity<>(lessonsDTO, HttpStatus.OK);
     }
 
@@ -45,8 +44,7 @@ public class LessonController {
     @GetMapping(value = "/lessons/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "View one available Lesson", response = LessonDTO.class)
     ResponseEntity<LessonDTO> findOne(@PathVariable Long id) {
-        Lesson lesson = lessonService.findById(id)
-                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "lesson"));
+        Lesson lesson = lessonService.findById(id);
 
         LessonDTO lessonDTO = modelMapper.map(lesson, LessonDTO.class);
         return new ResponseEntity<>(lessonDTO, HttpStatus.OK);

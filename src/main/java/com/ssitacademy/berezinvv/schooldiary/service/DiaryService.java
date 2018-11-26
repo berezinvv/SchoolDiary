@@ -19,7 +19,7 @@ public interface DiaryService {
 
     Diary update(Diary diary);
 
-    Optional<Diary> findById(Long id);
+    Diary findById(Long id);
 
     List<Diary> findAll();
 

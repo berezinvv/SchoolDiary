@@ -69,14 +69,14 @@ public class LessonServiceImplTest {
 
     @Test
     public void findById_whenNonExistingIdTest() {
-        Optional<Lesson> lesson = lessonService.findById(14L);
+        Lesson lesson = lessonService.findById(14L);
         assertThat(lesson).isNull();
     }
 
     @Test
     public void testFindById_whenValidIdTest() {
-        Optional<Lesson> lesson = lessonService.findById(2L);
-        assertThat(lesson.get()).isEqualTo(lesson_2);
+        Lesson lesson = lessonService.findById(2L);
+        assertThat(lesson).isEqualTo(lesson_2);
     }
 
     @Test

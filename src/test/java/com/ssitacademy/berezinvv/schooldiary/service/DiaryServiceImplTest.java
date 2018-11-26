@@ -87,14 +87,14 @@ public class DiaryServiceImplTest {
 
     @Test
     public void findById_whenNonExistingIdTest() {
-        Optional<Diary> diary = diaryService.findById(14L);
+        Diary diary = diaryService.findById(14L);
         assertThat(diary).isNull();
     }
 
     @Test
     public void testFindById_whenValidIdTest() {
-        Optional<Diary> diary = diaryService.findById(2L);
-        assertThat(diary.get()).isEqualTo(diary_2);
+        Diary diary = diaryService.findById(2L);
+        assertThat(diary).isEqualTo(diary_2);
     }
 
     @Test

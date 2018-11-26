@@ -67,14 +67,14 @@ public class SchoolServiceImplTest {
 
     @Test
     public void findById_whenNonExistingIdTest() {
-        Optional<School> school = schoolService.findById(14L);
+        School school = schoolService.findById(14L);
         assertThat(school).isNull();
     }
 
     @Test
     public void testFindById_whenValidIdTest() {
-        Optional<School> school = schoolService.findById(2L);
-        assertThat(school.get()).isEqualTo(school_2);
+        School school = schoolService.findById(2L);
+        assertThat(school).isEqualTo(school_2);
     }
 
     @Test

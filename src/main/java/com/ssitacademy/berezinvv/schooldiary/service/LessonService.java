@@ -11,7 +11,7 @@ public interface LessonService {
 
     Lesson update(Lesson lesson);
 
-    Optional<Lesson> findById(Long id);
+    Lesson findById(Long id);
 
     List<Lesson> findAll();
 

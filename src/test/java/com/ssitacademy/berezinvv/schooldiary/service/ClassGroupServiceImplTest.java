@@ -71,14 +71,14 @@ public class ClassGroupServiceImplTest {
 
     @Test
     public void findById_whenNonExistingIdTest() {
-            Optional<ClassGroup> classGroup = classGroupService.findById(4L);
+            ClassGroup classGroup = classGroupService.findById(4L);
             assertThat(classGroup).isNull();
     }
 
     @Test
     public void findById_whenValidIdTest() {
-        Optional<ClassGroup> classGroup = classGroupService.findById(2L);
-        assertThat(classGroup.get()).isEqualTo(class2B);
+        ClassGroup classGroup = classGroupService.findById(2L);
+        assertThat(classGroup).isEqualTo(class2B);
     }
 
     @Test

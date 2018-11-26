@@ -1,5 +1,6 @@
 package com.ssitacademy.berezinvv.schooldiary.service;
 
+import com.ssitacademy.berezinvv.schooldiary.exception.EntityNotFoundSchoolDiaryException;
 import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
 import com.ssitacademy.berezinvv.schooldiary.model.Schedule;
 import com.ssitacademy.berezinvv.schooldiary.repository.ScheduleRepository;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -27,8 +27,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Optional<Schedule> findById(Long id) {
-        return scheduleRepository.findById(id);
+    public Schedule findById(Long id) {
+        return scheduleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "schedule"));
     }
 
     @Override

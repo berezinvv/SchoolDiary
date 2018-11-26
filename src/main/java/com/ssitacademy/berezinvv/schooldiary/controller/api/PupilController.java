@@ -2,7 +2,6 @@ package com.ssitacademy.berezinvv.schooldiary.controller.api;
 
 import com.ssitacademy.berezinvv.schooldiary.dto.ClassGroupDTO;
 import com.ssitacademy.berezinvv.schooldiary.dto.PupilDTO;
-import com.ssitacademy.berezinvv.schooldiary.exception.EntityNotFoundSchoolDiaryException;
 import com.ssitacademy.berezinvv.schooldiary.model.ClassGroup;
 import com.ssitacademy.berezinvv.schooldiary.model.Pupil;
 import com.ssitacademy.berezinvv.schooldiary.service.ClassGroupService;
@@ -15,7 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,10 +30,9 @@ public class PupilController {
     private ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping(value = "/pupilClassGroup/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "View a list of available Pupil by ClassGroup", response = PupilDTO.class, responseContainer="List")
+    @ApiOperation(value = "View a list of available Pupil by ClassGroup", response = PupilDTO.class, responseContainer = "List")
     public ResponseEntity<List<PupilDTO>> findPupilByClassGroupId(@PathVariable Long id) {
-        ClassGroup classGroup = classGroupService.findById(id)
-                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "class group"));
+        ClassGroup classGroup = classGroupService.findById(id);
         List<Pupil> pupils = pupilService.findAllPupilByClassGroup(classGroup);
         pupils.sort(Comparator.comparingLong(p -> p.getId()));
         List<PupilDTO> pupilsDTO = pupils.stream().map(pupil -> modelMapper.map(pupil, PupilDTO.class)).collect(Collectors.toList());
@@ -42,10 +41,9 @@ public class PupilController {
     }
 
     @GetMapping(value = "/classGroupByPupil/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "View a list of available ClassGroup by Pupil", response = PupilDTO.class, responseContainer="List")
+    @ApiOperation(value = "View a list of available ClassGroup by Pupil", response = PupilDTO.class, responseContainer = "List")
     public ResponseEntity<List<ClassGroupDTO>> getClassGroupsByPupilId(@PathVariable Long id) {
-        Pupil pupil = pupilService.findById(id)
-                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "pupil"));
+        Pupil pupil = pupilService.findById(id);
         List<ClassGroup> classGroups = classGroupService.findAllClassGroupByPupil(pupil);
 
         List<ClassGroupDTO> classGroupsDTO = classGroups.stream().map(classGroup -> modelMapper.map(classGroup, ClassGroupDTO.class)).collect(Collectors.toList());
@@ -54,11 +52,11 @@ public class PupilController {
     }
 
     @GetMapping(value = "/pupils", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "View a list of available Pupil", response = PupilDTO.class, responseContainer="List")
+    @ApiOperation(value = "View a list of available Pupil", response = PupilDTO.class, responseContainer = "List")
     public ResponseEntity<List<PupilDTO>> findAll() {
         List<Pupil> pupils = pupilService.findAll();
 
-        List<PupilDTO> pupilsDTO = pupils.stream().map(pupil->modelMapper.map(pupil, PupilDTO.class)).collect(Collectors.toList());
+        List<PupilDTO> pupilsDTO = pupils.stream().map(pupil -> modelMapper.map(pupil, PupilDTO.class)).collect(Collectors.toList());
         return new ResponseEntity<>(pupilsDTO, HttpStatus.OK);
     }
 
@@ -74,8 +72,7 @@ public class PupilController {
     @GetMapping(value = "/pupils/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "View one available Pupil", response = PupilDTO.class)
     public ResponseEntity<PupilDTO> findOne(@PathVariable Long id) {
-        Pupil pupil = pupilService.findById(id)
-                .orElseThrow(() -> new EntityNotFoundSchoolDiaryException(id, "pupil"));
+        Pupil pupil = pupilService.findById(id);
 
         PupilDTO pupilDTO = modelMapper.map(pupil, PupilDTO.class);
         return new ResponseEntity<>(pupilDTO, HttpStatus.OK);

@@ -70,14 +70,14 @@ public class ScheduleServiceImplTest {
 
     @Test
     public void findById_whenNonExistingIdTest() {
-        Optional<Schedule> schedule = scheduleService.findById(14L);
+        Schedule schedule = scheduleService.findById(14L);
         assertThat(schedule).isNull();
     }
 
     @Test
     public void testFindById_whenValidIdTest() {
-        Optional<Schedule> schedule = scheduleService.findById(2L);
-        assertThat(schedule.get()).isEqualTo(schedule_2);
+        Schedule schedule = scheduleService.findById(2L);
+        assertThat(schedule).isEqualTo(schedule_2);
     }
 
     @Test

@@ -48,7 +48,6 @@ public class SchoolServiceImplTest {
         allSchools = Arrays.asList(school_3, school_2, school_1);
 
         Mockito.when(schoolRepository.save(school_1)).thenReturn(school_1);
-        Mockito.when(schoolRepository.findById(14L)).thenReturn(null);
         Mockito.when(schoolRepository.findById(2L)).thenReturn(Optional.of(school_2));
         Mockito.when(schoolRepository.findAll()).thenReturn(allSchools);
     }
@@ -63,12 +62,6 @@ public class SchoolServiceImplTest {
     public void updateTest() {
         School school = schoolService.update(school_1);
         assertThat(school).isEqualTo(school_1);
-    }
-
-    @Test
-    public void findById_whenNonExistingIdTest() {
-        School school = schoolService.findById(14L);
-        assertThat(school).isNull();
     }
 
     @Test

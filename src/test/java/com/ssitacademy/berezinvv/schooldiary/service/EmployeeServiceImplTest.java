@@ -52,7 +52,6 @@ public class EmployeeServiceImplTest {
         allEmployees = Arrays.asList(employee_3, employee_2, employee_1);
 
         Mockito.when(employeeRepository.save(employee_1)).thenReturn(employee_1);
-        Mockito.when(employeeRepository.findById(14L)).thenReturn(null);
         Mockito.when(employeeRepository.findById(employee_2.getId())).thenReturn(Optional.of(employee_2));
         Mockito.when(employeeRepository.findAll()).thenReturn(allEmployees);
     }
@@ -67,12 +66,6 @@ public class EmployeeServiceImplTest {
     public void updateTest() {
         Employee employee = employeeService.update(employee_1);
         assertThat(employee).isEqualTo(employee_1);
-    }
-
-    @Test
-    public void findById_whenNonExistingIdTest() {
-        Employee employee = employeeService.findById(14L);
-        assertThat(employee).isNull();
     }
 
     @Test

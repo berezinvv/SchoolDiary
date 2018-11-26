@@ -51,7 +51,6 @@ public class ClassGroupServiceImplTest {
         allClassGroup = Arrays.asList(class3A, class2B, class1A);
 
         Mockito.when(classGroupRepository.save(class3A)).thenReturn(class3A);
-        Mockito.when(classGroupRepository.findById(4L)).thenReturn(null);
         Mockito.when(classGroupRepository.findById(class2B.getId())).thenReturn(Optional.of(class2B));
         Mockito.when(classGroupRepository.findAll()).thenReturn(allClassGroup);
         Mockito.when(classGroupRepository.findAllClassGroupByPupil(pupil)).thenReturn(allClassGroup);
@@ -67,12 +66,6 @@ public class ClassGroupServiceImplTest {
     public void updateTest() {
         ClassGroup classGroup = classGroupService.update(class3A);
         assertThat(classGroup).isEqualTo(class3A);
-    }
-
-    @Test
-    public void findById_whenNonExistingIdTest() {
-            ClassGroup classGroup = classGroupService.findById(4L);
-            assertThat(classGroup).isNull();
     }
 
     @Test

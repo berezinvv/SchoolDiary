@@ -51,7 +51,6 @@ public class ScheduleServiceImplTest {
         allSchedules = Arrays.asList(schedule_3, schedule_2, schedule_1);
 
         Mockito.when(scheduleRepository.save(schedule_1)).thenReturn(schedule_1);
-        Mockito.when(scheduleRepository.findById(14L)).thenReturn(null);
         Mockito.when(scheduleRepository.findById(schedule_2.getId())).thenReturn(Optional.of(schedule_2));
         Mockito.when(scheduleRepository.findAll()).thenReturn(allSchedules);
     }
@@ -66,12 +65,6 @@ public class ScheduleServiceImplTest {
     public void updateTest() {
         Schedule schedule = scheduleService.update(schedule_1);
         assertThat(schedule).isEqualTo(schedule_1);
-    }
-
-    @Test
-    public void findById_whenNonExistingIdTest() {
-        Schedule schedule = scheduleService.findById(14L);
-        assertThat(schedule).isNull();
     }
 
     @Test

@@ -65,7 +65,6 @@ public class DiaryServiceImplTest {
         allDiaries = Arrays.asList(diary_3, diary_2, diary_1);
 
         Mockito.when(diaryRepository.save(diary_1)).thenReturn(diary_1);
-        Mockito.when(diaryRepository.findById(14L)).thenReturn(null);
         Mockito.when(diaryRepository.findById(diary_2.getId())).thenReturn(Optional.of(diary_2));
         Mockito.when(diaryRepository.findAll()).thenReturn(allDiaries);
         Mockito.when(diaryRepository.findAllByClassGroup(classgroup)).thenReturn(allDiaries);
@@ -83,12 +82,6 @@ public class DiaryServiceImplTest {
     public void updateTest() {
         Diary diary = diaryService.update(diary_1);
         assertThat(diary).isEqualTo(diary_1);
-    }
-
-    @Test
-    public void findById_whenNonExistingIdTest() {
-        Diary diary = diaryService.findById(14L);
-        assertThat(diary).isNull();
     }
 
     @Test

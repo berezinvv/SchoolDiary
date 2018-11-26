@@ -50,7 +50,6 @@ public class LessonServiceImplTest {
         allLessons = Arrays.asList(lesson_3, lesson_2, lesson_1);
 
         Mockito.when(lessonRepository.save(lesson_1)).thenReturn(lesson_1);
-        Mockito.when(lessonRepository.findById(14L)).thenReturn(null);
         Mockito.when(lessonRepository.findById(lesson_2.getId())).thenReturn(Optional.of(lesson_2));
         Mockito.when(lessonRepository.findAll()).thenReturn(allLessons);
     }
@@ -65,12 +64,6 @@ public class LessonServiceImplTest {
     public void updateTest() {
         Lesson lesson = lessonService.update(lesson_1);
         assertThat(lesson).isEqualTo(lesson_1);
-    }
-
-    @Test
-    public void findById_whenNonExistingIdTest() {
-        Lesson lesson = lessonService.findById(14L);
-        assertThat(lesson).isNull();
     }
 
     @Test

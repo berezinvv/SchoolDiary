@@ -55,7 +55,6 @@ public class PupilServiceImplTest {
         allPupils = Arrays.asList(pupil_3, pupil_2, pupil_1);
 
         Mockito.when(pupilRepository.save(pupil_1)).thenReturn(pupil_1);
-        Mockito.when(pupilRepository.findById(14L)).thenReturn(null);
         Mockito.when(pupilRepository.findById(pupil_2.getId())).thenReturn(Optional.of(pupil_2));
         Mockito.when(pupilRepository.findAll()).thenReturn(allPupils);
         Mockito.when(pupilRepository.findAllPupilByClassGroup(classGroup)).thenReturn(allPupils);
@@ -71,12 +70,6 @@ public class PupilServiceImplTest {
     public void updateTest() {
         Pupil pupil = pupilService.update(pupil_1);
         assertThat(pupil).isEqualTo(pupil_1);
-    }
-
-    @Test
-    public void findById_whenNonExistingIdTest() {
-        Pupil pupil = pupilService.findById(14L);
-        assertThat(pupil).isNull();
     }
 
     @Test
